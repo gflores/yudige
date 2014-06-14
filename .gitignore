@@ -5,3 +5,5 @@ Assembly-*
 /*.exe
 *.sln
 *.userprefs
+/Assets/NGUI/Examples
+/Assets/NGUI/Examples.meta
