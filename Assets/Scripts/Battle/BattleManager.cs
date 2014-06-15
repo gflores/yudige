@@ -77,7 +77,6 @@ public class BattleManager : MonoBehaviour {
 	{
 		Debug.LogWarning("ENEMY IS DEAD !!");
 	}
-
 	//ENEMY ACTIONS END
 
 	//PLAYER ACTIONS BEGIN
