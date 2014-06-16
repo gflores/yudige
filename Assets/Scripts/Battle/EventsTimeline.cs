@@ -39,6 +39,7 @@ public class EventsTimeline : MonoBehaviour {
 			yield return new WaitForSeconds(0.001f);
 		}
 		Debug.LogWarning("timeline_event '" + timeline_event.name + "' FINISHED WAITING !");
+		scheduled_events.Remove(timeline_event);
 		StartCoroutine(timeline_event.on_complete_routine);
 	}
 }

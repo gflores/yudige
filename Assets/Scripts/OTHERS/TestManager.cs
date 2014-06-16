@@ -18,7 +18,7 @@ public class TestManager : MonoBehaviour {
 			}
 			if (Input.GetKeyDown(KeyCode.Z))
 			{
-				Debug.LogWarning("TEST schedule skill");
+				Debug.LogWarning("TEST click on skill");
 				PlayerBattle.instance.ClickOnSkill(skill_to_test);
 			}
 			if (Input.GetKeyDown(KeyCode.E))

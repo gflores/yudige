@@ -4,7 +4,7 @@ using System.Collections;
 public class PlayerBattle : MonoBehaviour {
 	public static PlayerBattle instance;
 
-	public float change_shield_cast_time = 1f;
+	public float change_element_cast_time = 1f;
 	public int current_shield {get; set;}
 	public bool is_shield_live {get; set;}
 	public bool has_element {get; set;}
@@ -141,7 +141,7 @@ public class PlayerBattle : MonoBehaviour {
 		
 		timeline_event_to_schedule = new TimelineEvent();
 		timeline_event_to_schedule.name = "P.Element change:" + element.ToString();
-		timeline_event_to_schedule.time_remaining = change_shield_cast_time;
+		timeline_event_to_schedule.time_remaining = change_element_cast_time;
 		timeline_event_to_schedule.on_complete_routine = Coroutine_ChangeElement(element);
 		EventsTimeline.instance.Schedule(timeline_event_to_schedule);
 
@@ -166,7 +166,7 @@ public class PlayerBattle : MonoBehaviour {
 		
 		timeline_event_to_schedule = new TimelineEvent();
 		timeline_event_to_schedule.name = "P.Element NEUTRAL";
-		timeline_event_to_schedule.time_remaining = change_shield_cast_time;
+		timeline_event_to_schedule.time_remaining = change_element_cast_time;
 		timeline_event_to_schedule.on_complete_routine = Coroutine_RemoveElement();
 		EventsTimeline.instance.Schedule(timeline_event_to_schedule);
 
