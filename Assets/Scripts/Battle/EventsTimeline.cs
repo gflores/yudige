@@ -38,7 +38,7 @@ public class EventsTimeline : MonoBehaviour {
 			timeline_event.time_remaining -= Time.deltaTime;
 			yield return new WaitForSeconds(0.001f);
 		}
-		Debug.LogWarning("timeline_event " + timeline_event.name + " FINISHED WAITING !");
+		Debug.LogWarning("timeline_event '" + timeline_event.name + "' FINISHED WAITING !");
 		StartCoroutine(timeline_event.on_complete_routine);
 	}
 }

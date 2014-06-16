@@ -1,17 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class BattleManager : MonoBehaviour {
 	public static BattleManager instance {get; set;}
 
 	public NonPlayerMoster enemy_moster {get; set;}
-	public Skill skill_to_schedule {get; set;}
 
+	public bool enemy_has_element {get; set;}
 	public Element enemy_current_element {get; set;}
 	public int enemy_current_life {get; set;}
-
-	public int player_current_shield {get; set;}
-
+	public EnemyAttack scheduled_enemy_attack {get; set;}
 	void Awake () {
 		instance = this;
 	}
@@ -41,8 +40,8 @@ public class BattleManager : MonoBehaviour {
 	IEnumerator Coroutine_StartBattle()
 	{
 		StateManager.instance.current_states.Add(StateManager.State.BATTLE);
-		enemy_current_life = enemy_moster.life;
-
+		enemy_moster.SetupForBattle();
+		PlayerBattle.instance.SetupForBattle();
 		StartCoroutine(Coroutine_EnemyLoop());
 		yield return new WaitForSeconds(0.001f);
 	}
@@ -53,81 +52,121 @@ public class BattleManager : MonoBehaviour {
 	{
 		while (true)
 		{
-			yield return new WaitForSeconds(5f);
-			EnemyChangeElement(EnemyGetNextElement());
+			enemy_moster.SetupForNewPhase();
+			while (enemy_moster.HasUsedAllAttacks() == false)
+			{
+				float[] before_after_time_to_wait = enemy_moster.GetBeforeAfterAttackTime();
+
+				yield return new WaitForSeconds(before_after_time_to_wait[0]);
+				scheduled_enemy_attack = enemy_moster.GetNextAttack();
+				ScheduleEnemyAttack(scheduled_enemy_attack);
+				yield return new WaitForSeconds(before_after_time_to_wait[1]);
+			}
+			yield return new WaitForSeconds(enemy_moster.attack_min_gap_time / 2);
+			scheduled_enemy_attack = enemy_moster.GetBurstAttack(enemy_current_element);
+			ScheduleEnemyAttack(scheduled_enemy_attack);
+			yield return new WaitForSeconds(enemy_moster.before_change_element_time);
+			ScheduleEnemyChangeElement(enemy_moster.GetNextElement());
 		}
 	}
-	void EnemyChangeElement(Element new_element)
+	void ScheduleEnemyChangeElement(Element element)
+	{
+		TimelineEvent timeline_event_to_schedule;
+		
+		timeline_event_to_schedule = new TimelineEvent();
+		timeline_event_to_schedule.name = "E.Element change:" + element.ToString();
+		timeline_event_to_schedule.time_remaining = EventsTimeline.instance.total_time;
+		timeline_event_to_schedule.on_complete_routine = Coroutine_EnemyChangeElement(element);
+		EventsTimeline.instance.Schedule(timeline_event_to_schedule);
+	}
+	IEnumerator Coroutine_EnemyChangeElement(Element element)
+	{
+		EnemyChangeElement(element);
+		yield return new WaitForSeconds(0.001f);
+	}
+	void ScheduleEnemyAttack(EnemyAttack attack_to_schedule)
+	{
+		TimelineEvent timeline_event_to_schedule;
+		
+		timeline_event_to_schedule = new TimelineEvent();
+		timeline_event_to_schedule.name = attack_to_schedule.damage.ToString();
+		timeline_event_to_schedule.time_remaining = EventsTimeline.instance.total_time;
+		timeline_event_to_schedule.on_complete_routine = Coroutine_EnemyAttackEffects(attack_to_schedule);
+		EventsTimeline.instance.Schedule(timeline_event_to_schedule);
+	}
+	IEnumerator Coroutine_EnemyAttackEffects(EnemyAttack enemy_attack)
+	{
+		if (enemy_attack.is_burst == true)
+		{
+			Debug.LogWarning("Boss attack changed to NEUTRAL !");
+			enemy_has_element = false;
+		}
+		if (PlayerBattle.instance.has_element == true)
+		{
+			ElementRelation element_relation = ElementManager.instance.GetRelationBetween(
+				enemy_attack.element, PlayerBattle.instance.current_element
+			);
+			int current_affinity = PlayerBattle.instance.GetCurrentElementAffinity();
+			switch (element_relation)
+			{
+			case ElementRelation.NORMAL:
+				Player.instance.current_life -= Mathf.Max(0, enemy_attack.damage - current_affinity);
+				break;
+			case ElementRelation.STRONG:
+				Player.instance.current_life -= (enemy_attack.damage * 2) + current_affinity;
+				break;
+			case ElementRelation.WEAK:
+				Player.instance.current_life -= Mathf.Max(0, (enemy_attack.damage / 2) - current_affinity);
+				break;
+			}
+			Debug.LogWarning("Player took damage, element_relation:" + element_relation);
+		}
+		else
+		{
+			Player.instance.current_life -= enemy_attack.damage;
+			//NEUTRAL
+		}
+		Debug.LogWarning("enemy_attack: base_damage:" + enemy_attack.damage);
+		Debug.LogWarning("new_player_life: " + Player.instance.current_life);
+
+		Player.instance.CheckDeath();
+		yield return new WaitForSeconds(0.001f);
+	}
+	public void EnemyChangeElement(Element new_element)
 	{
 		Debug.LogWarning("enemy change element from: " + enemy_current_element + "to: " + new_element);
 		enemy_current_element = new_element;
-	}
-	Element EnemyGetNextElement()
-	{
-		Element to_return;
-
-		while ((to_return = (Element)Random.Range(0, (int)Element.Count)) == enemy_current_element);
-		return to_return;
 	}
 	public int GetEnemyMaxLife()
 	{
 		return enemy_moster.life;
 	}
-	void OnEnemyDeath()
+	public bool CheckEnemyDeath()
 	{
-		Debug.LogWarning("ENEMY IS DEAD !!");
-	}
-	//ENEMY ACTIONS END
-
-	//PLAYER ACTIONS BEGIN
-	public void SchedulePlayerAttack(Skill n_skill_to_schedule)
-	{
-		skill_to_schedule = n_skill_to_schedule;
-		LaunchSchedulePlayerAttack();
-	}
-
-	public void LaunchSchedulePlayerAttack()
-	{
-		TimelineEvent timeline_event_to_schedule;
-
-		timeline_event_to_schedule = new TimelineEvent();
-		timeline_event_to_schedule.name = skill_to_schedule.skill_name;
-		timeline_event_to_schedule.time_remaining = skill_to_schedule.cast_time;
-		timeline_event_to_schedule.on_complete_routine = Coroutine_SkillEffects(skill_to_schedule);
-		EventsTimeline.instance.Schedule(timeline_event_to_schedule);
-	}
-	IEnumerator Coroutine_SkillEffects(Skill skill)
-	{
-		SkillEffects skill_effects = skill.GetEffects();
-
-		if (skill_effects.deals_damage)
-		{
-			ElementRelation element_relation = ElementManager.instance.GetRelationBetween(
-				skill.element, enemy_current_element
-			);
-			int current_boss_affinity = enemy_moster.moster_data.element_affinity_modifiers[(int)enemy_current_element];
-			switch (element_relation)
-			{
-			case ElementRelation.NORMAL:
-				enemy_current_life -= Mathf.Max(0, skill_effects.damages - current_boss_affinity);
-				break;
-			case ElementRelation.STRONG:
-				enemy_current_life -= Mathf.Max(0, (skill_effects.damages * 2) + current_boss_affinity);
-				break;
-			case ElementRelation.WEAK:
-				enemy_current_life -= Mathf.Max(0, (skill_effects.damages / 2) - current_boss_affinity);
-				break;
-			}
-			Debug.LogWarning("skill_effect: base_damage:" + skill_effects.damages);
-			Debug.LogWarning("element_relation:" + element_relation);
-			Debug.LogWarning("new_boss_life: " + enemy_current_life);
-		}
 		if (enemy_current_life <= 0)
 		{
 			enemy_current_life = 0;
 			OnEnemyDeath();
+			return true;
 		}
-		yield return new WaitForSeconds(0.001f);
+		return false;
+	}
+	void OnEnemyDeath()
+	{
+		Debug.LogWarning("ENEMY IS DEAD !!");
+	}
+
+	public int GetEnemyCurrentElementAffinity()
+	{
+		return enemy_moster.moster_data.element_affinity_modifiers[(int)enemy_current_element];
+	}
+	//ENEMY ACTIONS END
+
+	//PLAYER ACTIONS BEGIN
+
+	public void OnPlayerDeath()
+	{
+		Debug.LogWarning("mort en combat");
 	}
 	//PLAYER ACTIONS END
 }

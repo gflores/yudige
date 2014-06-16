@@ -10,7 +10,6 @@ public class Player : MonoBehaviour {
 	public int[] base_element_affinities{get;set;}
 
 	public int current_life {get; set;}
-	public int current_shield {get; set;}
 
 	void Awake () {
 		instance = this;
@@ -35,5 +34,23 @@ public class Player : MonoBehaviour {
 	{
 		current_life += new_moster.life_bonus;
 		current_moster = new_moster;
+	}
+
+	public bool CheckDeath()
+	{
+		if (current_life <= 0)
+		{
+			current_life = 0;
+			OnDeath();
+			if (StateManager.instance.current_states.Contains(StateManager.State.BATTLE))
+			    BattleManager.instance.OnPlayerDeath();
+			return true;
+		}
+		return false;
+	}
+
+	public void OnDeath()
+	{
+		Debug.LogWarning("DEAD");
 	}
 }
