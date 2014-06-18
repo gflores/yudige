@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class BattleManager : MonoBehaviour {
 	public static BattleManager instance {get; set;}
 
-	public NonPlayerMoster enemy_moster {get; set;}
+	public NpcMosterBattle enemy_moster {get; set;}
 
 	public bool enemy_has_element {get; set;}
 	public Element enemy_current_element {get; set;}
@@ -24,7 +24,7 @@ public class BattleManager : MonoBehaviour {
 
 
 	//BATTLE MANAGEMENT BEGIN
-	public void StartBattle(NonPlayerMoster n_enemy_moster)
+	public void StartBattle(NpcMosterBattle n_enemy_moster)
 	{
 		enemy_moster = n_enemy_moster;
 		LaunchStartBattle();
@@ -40,6 +40,8 @@ public class BattleManager : MonoBehaviour {
 	IEnumerator Coroutine_StartBattle()
 	{
 		StateManager.instance.current_states.Add(StateManager.State.BATTLE);
+		StateManager.instance.UpdateFromStates();
+
 		enemy_moster.SetupForBattle();
 		PlayerBattle.instance.SetupForBattle();
 		StartCoroutine(Coroutine_EnemyLoop());
@@ -153,6 +155,12 @@ public class BattleManager : MonoBehaviour {
 	}
 	void OnEnemyDeath()
 	{
+		StateManager.instance.current_states.Remove(StateManager.State.BATTLE);
+		StateManager.instance.current_states.Add(StateManager.State.EXPLORATION);
+		StateManager.instance.UpdateFromStates();
+
+		Player.instance.current_karma += enemy_moster.karma_points_rewards;
+		MostersManager.instance.AddToEliminated(enemy_moster.moster_data);
 		Debug.LogWarning("ENEMY IS DEAD !!");
 	}
 

@@ -19,4 +19,34 @@ public class StateManager : MonoBehaviour {
 		current_states = new List<State>();
 		instance = this;
 	}
+
+	public void UpdateFromStates()
+	{
+		if (current_states.Contains(State.EXPLORATION_MENU) == true)
+		{
+			Player.instance.is_living_time_passing = false;
+		}
+		else
+		{
+			Player.instance.is_living_time_passing = true;
+		}
+		if (current_states.Contains(State.EXPLORATION) == true)
+		{
+			GameManager.instance.exploration_camera.enabled = true;
+		}
+		else
+		{
+			GameManager.instance.exploration_camera.enabled = false;
+		}
+
+	
+		if (current_states.Contains(State.BATTLE) == true)
+		{
+			GameManager.instance.battle_camera.enabled = true;
+		}
+		else
+		{
+			GameManager.instance.battle_camera.enabled = false;
+		}
+	}
 }

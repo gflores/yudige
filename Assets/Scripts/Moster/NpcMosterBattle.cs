@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-public class NonPlayerMoster : MonoBehaviour {
-	public MosterData moster_data;
+public class NpcMosterBattle : MonoBehaviour {
+	public MosterData moster_data{get; set;}
 	public int life = 100;
 	public float approx_nb_attack_before_burst = 20;
 	public float burst_attack_ratio = 2f;
@@ -16,6 +16,8 @@ public class NonPlayerMoster : MonoBehaviour {
 	public float before_change_element_time = 10f;
 	public float after_change_element_time = 2f;
 	public int max_different_defense_element_nb = 3;
+
+	public int karma_points_rewards = 10;
 
 	public List<Element> current_phase_attacks_elements {get; set;}
 	public List<Element> current_defense_elements_list {get; set;}
