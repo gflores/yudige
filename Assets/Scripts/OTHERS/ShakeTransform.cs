@@ -29,7 +29,7 @@ public class ShakeTransform : MonoBehaviour {
 		if (target_transform == null)
 			target_transform = transform;
 		_camera_component = target_transform.GetComponent<Camera>();
-//		StartCoroutine(LaunchShake());
+		StartCoroutine(LaunchShake());
 	}
 	int _transformations_number = 0;
 	public IEnumerator LaunchShake()

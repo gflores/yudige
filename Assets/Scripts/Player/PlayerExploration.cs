@@ -6,6 +6,7 @@ public class PlayerExploration : MonoBehaviour {
 	public static PlayerExploration instance;
 
 	public float move_speed = 1f;
+	public Animator main_animator;
 	public SpriteRenderer main_renderer;
 	public Transform visuals_transform;
 	public Transform hitboxes_transform;
@@ -26,6 +27,8 @@ public class PlayerExploration : MonoBehaviour {
 	{
 		if (can_control == true)
 			CheckControls();
+		else
+			_move_vector = Vector2.zero;
 	}
 	public void EnableControls()
 	{
@@ -57,7 +60,7 @@ public class PlayerExploration : MonoBehaviour {
 	}
 	public void UpdateMosterExploration()
 	{
-		main_renderer.sprite = Player.instance.current_moster.GetSprite();
+		main_animator.runtimeAnimatorController = Player.instance.current_moster.GetAnimatorController();
 		main_renderer.color = Color.green;
 		hitboxes_transform.localScale = Player.instance.current_moster.exploration_collider.transform.localScale;
 		visuals_transform.localScale = Player.instance.current_moster.visuals_transform.localScale;

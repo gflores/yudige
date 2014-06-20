@@ -19,7 +19,16 @@ public class StateManager : MonoBehaviour {
 		current_states = new List<State>();
 		instance = this;
 	}
-
+	public void SetControls(bool active)
+	{
+		if (current_states.Contains(State.EXPLORATION) == true)
+		{
+			if (active == true)
+				PlayerExploration.instance.EnableControls();
+			else
+				PlayerExploration.instance.DisableControls();
+		}
+	}
 	public void UpdateFromStates()
 	{
 		if (current_states.Contains(State.EXPLORATION_MENU) == true)

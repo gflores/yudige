@@ -35,8 +35,8 @@ public class MostersManager : MonoBehaviour {
 			MosterData moster_data_to_evolve_to = GetMosterWithHighestEvolutionScore();
 			if (moster_data_to_evolve_to != null)
 				Player.instance.EvolveTo(moster_data_to_evolve_to);
-			else
-				Debug.LogWarning("Checked evolution: no evolution !");
+//			else
+//				Debug.LogWarning("Checked evolution: no evolution !");
 		}
 	}
 	MosterData GetMosterWithHighestEvolutionScore()

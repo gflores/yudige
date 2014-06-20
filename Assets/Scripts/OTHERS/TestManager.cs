@@ -58,6 +58,19 @@ public class TestManager : MonoBehaviour {
 				Player.instance.current_karma += 1;
 			}
 		}
+		if (Input.GetKey(KeyCode.RightShift))
+		{
+			if (Input.GetKey(KeyCode.A))
+			{
+				CameraManager.instance.SetColorToFadePlane(Color.red);
+				 StartCoroutine(CameraManager.instance.COROUTINE_MainCameraFadeToTransparent());
+			}//soos
+			if (Input.GetKey(KeyCode.Z))
+			{
+				CameraManager.instance.SetColorToFadePlane(Color.blue);
+				StartCoroutine(CameraManager.instance.COROUTINE_MainCameraFadeToOpaque(3f));
+			}
+		}
 
 		if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.F1))
 		{

@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour {
 	public static GameManager instance;
 	public int player_starting_life = 100;
 	public MosterData starting_moster;
+	public Camera main_camera {get; set;}
 	public Camera exploration_camera {get; set;}
 	public Camera battle_camera {get; set;}
 	void Awake()
@@ -13,6 +14,7 @@ public class GameManager : MonoBehaviour {
 		instance = this;
 		exploration_camera = GameObject.FindGameObjectWithTag("ExplorationCamera").camera;
 		battle_camera = GameObject.FindGameObjectWithTag("BattleCamera").camera;
+		main_camera = GameObject.FindGameObjectWithTag("MainCamera").camera;
 	}
 	void Start () {
 		if (SaveManager.current_saved_game.is_new_game == true)
