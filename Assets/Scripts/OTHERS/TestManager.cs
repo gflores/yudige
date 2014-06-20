@@ -64,11 +64,16 @@ public class TestManager : MonoBehaviour {
 			{
 				CameraManager.instance.SetColorToFadePlane(Color.red);
 				 StartCoroutine(CameraManager.instance.COROUTINE_MainCameraFadeToTransparent());
-			}//soos
+			}
 			if (Input.GetKey(KeyCode.Z))
 			{
 				CameraManager.instance.SetColorToFadePlane(Color.blue);
 				StartCoroutine(CameraManager.instance.COROUTINE_MainCameraFadeToOpaque(3f));
+			}
+			if (Input.GetKey(KeyCode.D))
+			{
+				Debug.LogWarning("TEST: player death");
+				Player.instance.OnDeath();
 			}
 		}
 

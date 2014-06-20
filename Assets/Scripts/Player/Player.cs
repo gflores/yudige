@@ -52,10 +52,22 @@ public class Player : MonoBehaviour {
 
 	public void EvolveTo(MosterData new_moster)
 	{
+		StartCoroutine(Coroutine_EvolutionScene(new_moster));
+	}
+	public IEnumerator Coroutine_EvolutionScene(MosterData new_moster)
+	{
 		Debug.LogWarning("EVOLVING TO: " + new_moster.moster_name);
+		PlayerExploration.instance.DisableControls();
+		CameraManager.instance.SetColorToBehindPlane(Color.white);
+		yield return StartCoroutine(CameraManager.instance.COROUTINE_ExplorationPlaneBehindToOpaque(2f));
+
+		//apply change
 		MostersManager.instance.AddToEvolved(current_moster);
 		time_lived = 0f;
 		ApplyEvolutionChanges(new_moster);
+		//return to exploration normal state
+		yield return StartCoroutine(CameraManager.instance.COROUTINE_ExplorationPlaneBehindToTransparent(2f));
+		PlayerExploration.instance.EnableControls();
 	}
 	public void ApplyEvolutionChanges(MosterData new_moster)
 	{
@@ -80,8 +92,32 @@ public class Player : MonoBehaviour {
 	public void OnDeath()
 	{
 		Debug.LogWarning("DEAD");
+		StartCoroutine(Coroutine_DeathScene());
 	}
+	IEnumerator Coroutine_DeathScene()
+	{
+		PlayerExploration.instance.DisableControls();
+		CameraManager.instance.SetColorToBehindPlane(Color.black);
+		yield return StartCoroutine(CameraManager.instance.COROUTINE_ExplorationPlaneBehindToOpaque(2f));
 
+		ApplyDeathChange();
+		yield return StartCoroutine(CameraManager.instance.COROUTINE_ExplorationPlaneBehindToTransparent(2f));
+		PlayerExploration.instance.EnableControls();
+	}
+	void ApplyDeathChange()
+	{
+		base_shield = 0;
+		current_life = 0;
+		for (int i = 0; i != base_element_affinities.Length; ++i)
+			base_element_affinities[i] = 0;
+		MostersManager.instance.AddToEvolved(current_moster);
+		current_karma = MostersManager.instance.eliminated_mosters_list.Count + MostersManager.instance.evolved_mosters_list.Count;
+		ApplyEvolutionChanges(GameManager.instance.baby_moster);
+
+		GameManager.instance.rebirth_screen.SetCameraToThis();
+		GameManager.instance.rebirth_screen.ApplyBackgroundMusic();
+		PlayerExploration.instance.transform.position = GameManager.instance.rebirth_spawn_point.transform.position;
+	}
 	public void UseKarmaForLife()
 	{
 		if (current_karma <= 0)

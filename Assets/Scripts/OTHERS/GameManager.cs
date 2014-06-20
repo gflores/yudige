@@ -6,6 +6,9 @@ public class GameManager : MonoBehaviour {
 	public static GameManager instance;
 	public int player_starting_life = 100;
 	public MosterData starting_moster;
+	public MosterData baby_moster;
+	public ExplorationScreen rebirth_screen;
+	public Transform rebirth_spawn_point;
 	public Camera main_camera {get; set;}
 	public Camera exploration_camera {get; set;}
 	public Camera battle_camera {get; set;}

@@ -42,10 +42,12 @@ public class StateManager : MonoBehaviour {
 		if (current_states.Contains(State.EXPLORATION) == true)
 		{
 			GameManager.instance.exploration_camera.enabled = true;
+			PlayerExploration.instance.EnableControls();
 		}
 		else
 		{
 			GameManager.instance.exploration_camera.enabled = false;
+			PlayerExploration.instance.DisableControls();
 		}
 
 	

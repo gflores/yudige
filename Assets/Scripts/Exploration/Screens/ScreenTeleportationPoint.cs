@@ -12,5 +12,6 @@ public class ScreenTeleportationPoint : MonoBehaviour {
 			return ;
 		PlayerExploration.instance.transform.position = linked_teleportation_point.spawn_point.position;
 		linked_teleportation_point.exploration_screen.SetCameraToThis();
+		linked_teleportation_point.exploration_screen.ApplyBackgroundMusic();
 	}
 }

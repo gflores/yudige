@@ -34,9 +34,7 @@ public class MostersManager : MonoBehaviour {
 			}
 			MosterData moster_data_to_evolve_to = GetMosterWithHighestEvolutionScore();
 			if (moster_data_to_evolve_to != null)
-				Player.instance.EvolveTo(moster_data_to_evolve_to);
-//			else
-//				Debug.LogWarning("Checked evolution: no evolution !");
+				yield return StartCoroutine(Player.instance.Coroutine_EvolutionScene(moster_data_to_evolve_to));
 		}
 	}
 	MosterData GetMosterWithHighestEvolutionScore()
@@ -76,11 +74,13 @@ public class MostersManager : MonoBehaviour {
 
 	public void AddToEliminated(MosterData moster)
 	{
-		eliminated_mosters_list.Add(moster);
+		if (eliminated_mosters_list.Contains(moster) == false)
+			eliminated_mosters_list.Add(moster);
 	}
 	public void AddToEvolved(MosterData moster)
 	{
-		evolved_mosters_list.Add(moster);
+		if (evolved_mosters_list.Contains(moster) == false)
+			evolved_mosters_list.Add(moster);
 	}
 	public bool IsEliminated(MosterData moster)
 	{

@@ -34,17 +34,34 @@ public class BattleManager : MonoBehaviour {
 	{
 		if (IsBattleAlreadyLaunched() == true)
 			return ;
+		PlayerExploration.instance.DisableControls();
 		StartCoroutine(Coroutine_StartBattle());
 	}
-
 	IEnumerator Coroutine_StartBattle()
 	{
-		StateManager.instance.current_states.Add(StateManager.State.BATTLE);
-		StateManager.instance.UpdateFromStates();
+		Vector3 previous_position = CameraManager.instance.exploration_camera.transform.position;
+		Vector3 dest_camera_position = (enemy_moster.moster_data.moster_exploration.main_renderer.transform.position + 
+		                                PlayerExploration.instance.main_renderer.transform.position) / 2;
+		dest_camera_position.z = previous_position.z;
+		float initial_exploration_camera_size = CameraManager.instance.exploration_camera.orthographicSize;
+		TweenPosition.Begin(CameraManager.instance.exploration_camera.gameObject, 1f, dest_camera_position);
+		CameraManager.instance.SetColorToFadePlane(Color.white);
+		StartCoroutine(CameraManager.instance.COROUTINE_MainCameraFadeToTransparent(0.5f));
+		yield return StartCoroutine(CameraManager.instance.COROUTINE_LaunchExplorationCameraStartBattleAnimation(1f));
 
+		//ExplorationIntro finished
+		StateManager.instance.current_states.Add(StateManager.State.BATTLE);
 		enemy_moster.SetupForBattle();
 		PlayerBattle.instance.SetupForBattle();
 		StartCoroutine(Coroutine_EnemyLoop());
+		StateManager.instance.UpdateFromStates();
+		//BattleIntroStarting
+//		float initial_battle_camera_size = CameraManager.instance.battle_camera.orthographicSize;
+
+		//BattleIntro finished
+		//ExplorationIntro cleanup
+		CameraManager.instance.exploration_camera.orthographicSize = initial_exploration_camera_size;
+		CameraManager.instance.exploration_camera.transform.position = previous_position;
 		yield return new WaitForSeconds(0.001f);
 	}
 	//BATTLE MANAGEMENT END
