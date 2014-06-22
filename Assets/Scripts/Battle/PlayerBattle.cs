@@ -53,6 +53,10 @@ public class PlayerBattle : MonoBehaviour {
 		is_changing_element = false;
 		is_casting_skill = false;
 		main_renderer.color = Color.white;
+		foreach(var defense_FX in defenses_FX)
+			defense_FX.Stop();
+		foreach(var attack_FX in attacks_FX)
+			attack_FX.Stop();
 	}
 
 	public int GetCurrentElementAffinity()
@@ -112,8 +116,11 @@ public class PlayerBattle : MonoBehaviour {
 	{
 		attack_FX.transform.position = BattleManager.instance.battle_right_side_point.position;
 		attack_FX.Play();
-		TweenPosition.Begin(attack_FX.gameObject, 0.5f, BattleManager.instance.battle_left_side_point.position);
-		yield return new WaitForSeconds(0.1f);
+		Vector3 dest_position = BattleManager.instance.battle_right_side_point.position;
+		dest_position.x = BattleManager.instance.enemy_visual_transform.position.x;
+		SoundManager.instance.PlayIndependant(SoundManager.instance.attack_start_sound);
+		TweenPosition.Begin(attack_FX.gameObject, 0.5f, dest_position);
+		yield return new WaitForSeconds(0.2f);
 		attack_FX.Stop();
 		
 	}
@@ -122,7 +129,7 @@ public class PlayerBattle : MonoBehaviour {
 	IEnumerator Coroutine_SkillEffects(Skill skill)
 	{
 		StartCoroutine(Coroutine_AttackFX(attacks_FX[(int)skill.element]));
-		yield return new WaitForSeconds(0.4f);
+		yield return new WaitForSeconds(0.5f);
 
 		SkillEffects skill_effects = skill.GetEffects();
 		last_skill_effect_applied = skill_effects;
@@ -138,14 +145,17 @@ public class PlayerBattle : MonoBehaviour {
 				switch (element_relation)
 				{
 				case ElementRelation.NORMAL:
+					SoundManager.instance.PlayIndependant(SoundManager.instance.normal_damage_sound);
 					StartCoroutine(SpecialEffectsManager.instance.normal_damage_shake.LaunchShake(BattleManager.instance.enemy_moster.visuals_transform));
 					BattleManager.instance.enemy_current_life -= Mathf.Max(0, skill_effects.damages - current_boss_affinity);
 					break;
 				case ElementRelation.STRONG:
+					SoundManager.instance.PlayIndependant(SoundManager.instance.strong_damage_sound);
 					StartCoroutine(SpecialEffectsManager.instance.critical_damage_shake.LaunchShake(BattleManager.instance.enemy_moster.visuals_transform));
 					BattleManager.instance.enemy_current_life -= (skill_effects.damages * 2) + current_boss_affinity;
 					break;
 				case ElementRelation.WEAK:
+					SoundManager.instance.PlayIndependant(SoundManager.instance.weak_damage_sound);
 					BattleManager.instance.enemy_moster.moster_data.moster_battle.generic_animator.SetTrigger("StayStill");
 					BattleManager.instance.enemy_current_life -= Mathf.Max(0, (skill_effects.damages / 2) - current_boss_affinity);
 					break;
@@ -154,6 +164,7 @@ public class PlayerBattle : MonoBehaviour {
 			}
 			else
 			{
+				SoundManager.instance.PlayIndependant(SoundManager.instance.normal_damage_sound);
 				StartCoroutine(SpecialEffectsManager.instance.normal_damage_shake.LaunchShake(BattleManager.instance.enemy_moster.visuals_transform));
 				BattleManager.instance.enemy_current_life -= skill_effects.damages;
 			}
@@ -218,6 +229,7 @@ public class PlayerBattle : MonoBehaviour {
 		foreach(var defense_FX in defenses_FX)
 			defense_FX.Stop();
 		defense_fx.Play();
+		SoundManager.instance.PlayIndependant(SoundManager.instance.change_element_sound);
 		ChangeElement(element);
 		is_changing_element = false;
 		yield return new WaitForSeconds(0.001f);
@@ -245,6 +257,7 @@ public class PlayerBattle : MonoBehaviour {
 	{
 		foreach(var defense_FX in defenses_FX)
 			defense_FX.Stop();
+		SoundManager.instance.PlayIndependant(SoundManager.instance.remove_element_sound);
 		RemoveElement();
 		is_changing_element = false;
 		yield return new WaitForSeconds(0.001f);

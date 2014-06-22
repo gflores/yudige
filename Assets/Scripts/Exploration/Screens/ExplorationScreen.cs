@@ -12,7 +12,12 @@ public class ExplorationScreen : MonoBehaviour {
 			point.exploration_screen = this;
 		}
 	}
-
+	public void MakeGoTo()
+	{
+		GameManager.instance.current_screen = this;
+		SetCameraToThis();
+		ApplyBackgroundMusic();
+	}
 	public void SetCameraToThis()
 	{
 		Vector3 new_cam_pos = cameras_point.position;
@@ -23,6 +28,8 @@ public class ExplorationScreen : MonoBehaviour {
 	public void ApplyBackgroundMusic()
 	{
 		if (background_music != null)
+		{
 			SoundManager.instance.PlayIfDifferent(background_music);
+		}
 	}
 }

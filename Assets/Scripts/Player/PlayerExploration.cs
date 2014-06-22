@@ -72,7 +72,7 @@ public class PlayerExploration : MonoBehaviour {
 	{
 		sprite_animator.runtimeAnimatorController = Player.instance.current_moster.GetAnimatorController();
 //		main_renderer.color = Color.green;
-		hitboxes_transform.localScale = Player.instance.current_moster.exploration_collider.transform.localScale;
+		hitboxes_transform.localScale = Player.instance.current_moster.exploration_hitboxes_transform.localScale;
 		visuals_transform.localScale = Player.instance.current_moster.visuals_transform.localScale;
 	}
 }

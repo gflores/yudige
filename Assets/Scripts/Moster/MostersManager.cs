@@ -21,6 +21,7 @@ public class MostersManager : MonoBehaviour {
 	void Start () {
 		StartCoroutine(Coroutine_CheckEvolutions());
 	}
+	
 	IEnumerator Coroutine_CheckEvolutions()
 	{
 		while (true)

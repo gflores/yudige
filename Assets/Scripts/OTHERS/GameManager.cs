@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour {
 	public Camera exploration_camera {get; set;}
 	public Camera battle_gui_camera {get; set;}
 	public Camera battle_element_camera {get; set;}
+	public ExplorationScreen current_screen {get; set;}
 	void Awake()
 	{
 		instance = this;
@@ -30,6 +31,7 @@ public class GameManager : MonoBehaviour {
 		{
 			SetGameFromSaveData();
 		}
+		rebirth_screen.MakeGoTo();
 		StateManager.instance.current_states.Add(StateManager.State.EXPLORATION);
 		StateManager.instance.UpdateFromStates();
 		Player.instance.RefreshMoster();
@@ -66,7 +68,11 @@ public class GameManager : MonoBehaviour {
 
 		MostersManager.instance.eliminated_mosters_list = new List<MosterData>();
 		foreach(var moster_index in SaveManager.current_saved_game.eliminated_mosters_list)
-			MostersManager.instance.eliminated_mosters_list.Add(MostersManager.instance.IndexToMosterData(moster_index));
+		{
+			MosterData moster_data = MostersManager.instance.IndexToMosterData(moster_index);
+			MostersManager.instance.eliminated_mosters_list.Add(moster_data);
+			moster_data.moster_exploration.gameObject.SetActive(false);
+		}
 
 		MostersManager.instance.evolved_mosters_list = new List<MosterData>();
 		foreach(var moster_index in SaveManager.current_saved_game.evolved_mosters_list)
@@ -75,7 +81,7 @@ public class GameManager : MonoBehaviour {
 		{
 			if (SaveManager.current_saved_game.pickup_karmic_point_state_list[i] == false)
 			{
-				PickupKarmicPointManager.instance.pickup_karma_list[i].Destroy();
+				PickupKarmicPointManager.instance.pickup_karma_list[i].gameObject.SetActive(false);
 			}
 		}
 	}
