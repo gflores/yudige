@@ -26,6 +26,12 @@ public class TestManager : MonoBehaviour {
 				Debug.LogWarning("TEST start battle");
 				BattleManager.instance.StartBattle(enemy_moster_to_test);
 			}
+			if (Input.GetKeyDown(KeyCode.R))
+			{
+				Debug.LogWarning("TEST start battle");
+				BattleManager.instance.EndBattle();
+			}
+
 			if (Input.GetKeyDown(KeyCode.D))
 			{
 				Debug.LogWarning("TEST player evolving to: " + player_moster_to_evolve_test.moster_name);
@@ -73,7 +79,7 @@ public class TestManager : MonoBehaviour {
 			if (Input.GetKey(KeyCode.D))
 			{
 				Debug.LogWarning("TEST: player death");
-				Player.instance.OnDeath();
+				Player.instance.LaunchDeath();
 			}
 		}
 

@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 
 public enum Element {
-	FIRE = 0,
-	WATER,
+	DARK = 0,
+	LIGHT,
+	ROCK,
+	FIRE,
 	Count
 }
 public enum ElementRelation{

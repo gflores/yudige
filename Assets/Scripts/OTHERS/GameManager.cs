@@ -11,12 +11,14 @@ public class GameManager : MonoBehaviour {
 	public Transform rebirth_spawn_point;
 	public Camera main_camera {get; set;}
 	public Camera exploration_camera {get; set;}
-	public Camera battle_camera {get; set;}
+	public Camera battle_gui_camera {get; set;}
+	public Camera battle_element_camera {get; set;}
 	void Awake()
 	{
 		instance = this;
 		exploration_camera = GameObject.FindGameObjectWithTag("ExplorationCamera").camera;
-		battle_camera = GameObject.FindGameObjectWithTag("BattleCamera").camera;
+		battle_gui_camera = GameObject.FindGameObjectWithTag("BattleGUICamera").camera;
+		battle_element_camera = GameObject.FindGameObjectWithTag("BattleElementCamera").camera;
 		main_camera = GameObject.FindGameObjectWithTag("MainCamera").camera;
 	}
 	void Start () {
@@ -30,6 +32,7 @@ public class GameManager : MonoBehaviour {
 		}
 		StateManager.instance.current_states.Add(StateManager.State.EXPLORATION);
 		StateManager.instance.UpdateFromStates();
+		Player.instance.RefreshMoster();
 		PlayerExploration.instance.UpdateMosterExploration();
 
 	}

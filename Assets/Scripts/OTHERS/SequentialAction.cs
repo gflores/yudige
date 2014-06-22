@@ -11,6 +11,10 @@ public class SequentialAction : MonoBehaviour
 	IEnumerator _actions_enumerator;
 	protected bool _can_do_next_action;
 
+	public virtual void StartSequence()
+	{
+		WantDoNextAction();
+	}
 	void Start()
 	{
 		_actions_enumerator = ActionList().GetEnumerator();

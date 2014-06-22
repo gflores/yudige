@@ -7,7 +7,7 @@ public class IntroScript : SequentialEventValidate {
 
 	protected override IEnumerable ActionList()
 	{
-		AtBegining();
+		OnStartEvent();
 		//Start
 
 		yield return StartCoroutine(_0());
@@ -16,17 +16,15 @@ public class IntroScript : SequentialEventValidate {
 		yield return StartCoroutine(_3());
 
 		//End
-		AtEnd();
+		OnEndEvent();
 		yield return StartCoroutine(_EndSequence());
 	}
-	void AtBegining()
-	{
-		StateManager.instance.SetControls(false);
+	IEnumerator _EndSequence(){
+		CameraManager.instance.SetColorToFadePlane(new Color(0, 0, 0, 0));
+		Debug.LogWarning("Finishing!");
+		yield return new WaitForSeconds(0.001f);
 	}
-	void AtEnd()
-	{
-		StateManager.instance.SetControls(true);
-	}
+
 	IEnumerator _0(){
 		CameraManager.instance.SetColorToFadePlane(Color.black);
 		Debug.LogWarning("Text1");
@@ -47,10 +45,5 @@ public class IntroScript : SequentialEventValidate {
 		yield return new WaitForSeconds(0.001f);
 	}
 
-	IEnumerator _EndSequence(){
-		CameraManager.instance.SetColorToFadePlane(new Color(0, 0, 0, 0));
-		Debug.LogWarning("Finishing!");
-		yield return new WaitForSeconds(0.001f);
-	}
 
 }

@@ -10,13 +10,14 @@ public class StateManager : MonoBehaviour {
 		REWARD,
 		EXPLORATION_MENU,
 		USE_KARMA_MENU,
-		SELECT_TRANSFORM_MENU
+		SELECT_TRANSFORM_MENU,
+		SCRIPTED_EVENT
 	};
-	public List<State> current_states {get; set;}
+	public HashSet<State> current_states {get; set;}
 
 	void Awake()
 	{
-		current_states = new List<State>();
+		current_states = new HashSet<State>();
 		instance = this;
 	}
 	public void SetControls(bool active)
@@ -31,33 +32,63 @@ public class StateManager : MonoBehaviour {
 	}
 	public void UpdateFromStates()
 	{
-		if (current_states.Contains(State.EXPLORATION_MENU) == true)
-		{
-			Player.instance.is_living_time_passing = false;
-		}
-		else
-		{
-			Player.instance.is_living_time_passing = true;
-		}
 		if (current_states.Contains(State.EXPLORATION) == true)
 		{
 			GameManager.instance.exploration_camera.enabled = true;
-			PlayerExploration.instance.EnableControls();
+			if (current_states.Contains(State.EXPLORATION_MENU) == true)
+				ExplorationTimeFlowing(false);
+			else
+				ExplorationTimeFlowing(true);
 		}
 		else
 		{
 			GameManager.instance.exploration_camera.enabled = false;
-			PlayerExploration.instance.DisableControls();
+			ExplorationTimeFlowing(false);
 		}
-
 	
 		if (current_states.Contains(State.BATTLE) == true)
 		{
-			GameManager.instance.battle_camera.enabled = true;
+			GameManager.instance.battle_gui_camera.enabled = true;
+			GameManager.instance.battle_element_camera.enabled = true;
+			BattleTimeFlowing(true);
 		}
 		else
 		{
-			GameManager.instance.battle_camera.enabled = false;
+			GameManager.instance.battle_gui_camera.enabled = false;
+			GameManager.instance.battle_element_camera.enabled = false;
+			BattleTimeFlowing(true);
+		}
+		if (current_states.Contains(State.SCRIPTED_EVENT) == true)
+		{
+			ExplorationTimeFlowing(false);
+			BattleTimeFlowing(false);
+		}
+	}
+
+	void ExplorationTimeFlowing(bool state)
+	{
+		if (state == true)
+		{
+			MostersManager.instance.can_check_evolution = true;
+			Player.instance.is_living_time_passing = true;
+			PlayerExploration.instance.EnableControls();
+		}
+		else
+		{
+			MostersManager.instance.can_check_evolution = false;
+			Player.instance.is_living_time_passing = false;
+			PlayerExploration.instance.DisableControls();
+		}
+	}
+	void BattleTimeFlowing(bool state)
+	{
+		if (state == true)
+		{
+			Player.instance.is_living_time_passing = true;
+		}
+		else
+		{
+			Player.instance.is_living_time_passing = false;
 		}
 	}
 }

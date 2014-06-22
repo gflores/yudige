@@ -19,6 +19,11 @@ public class NpcMosterBattle : MonoBehaviour {
 
 	public int karma_points_rewards = 10;
 
+	public Transform visuals_transform;
+	public SpriteRenderer main_renderer;
+	public Animator generic_animator;
+	public Animator sprite_animator;
+
 	public List<Element> current_phase_attacks_elements {get; set;}
 	public List<Element> current_defense_elements_list {get; set;}
 
@@ -27,7 +32,6 @@ public class NpcMosterBattle : MonoBehaviour {
 		current_phase_attacks_elements = new List<Element>();
 		int prev_value = -99999999;
 		BattleManager.instance.enemy_current_life = life;
-		BattleManager.instance.enemy_has_element = true;
 		for (int i = 0; i != (int) Element.Count; ++i)
 		{
 			if (moster_data.element_affinity_modifiers[i] > prev_value)
@@ -37,7 +41,10 @@ public class NpcMosterBattle : MonoBehaviour {
 			}
 		}
 		current_defense_elements_list = new List<Element>();
-		BattleManager.instance.EnemyChangeElement(GetNextElement());
+		if (BattleManager.instance.regular_enemy_routine == true)
+			BattleManager.instance.EnemyChangeElement(GetNextElement());
+		else
+			BattleManager.instance.enemy_has_element = false;
 
 	}
 	void GeneratePhaseAttacks()
@@ -82,7 +89,16 @@ public class NpcMosterBattle : MonoBehaviour {
 				current_phase_attacks_elements.Add(sequence.element);
 		}
 	}
+	public EnemyAttack GetAttack(Element element, bool is_burst = false)
+	{
+		EnemyAttack attack = new EnemyAttack();
 
+		attack.is_burst = is_burst;
+		attack.element = element;
+		attack.damage = moster_data.element_affinity_modifiers[(int)attack.element];
+
+		return attack;
+	}
 	public EnemyAttack GetNextAttack()
 	{
 		EnemyAttack attack = new EnemyAttack();

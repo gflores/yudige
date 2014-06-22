@@ -2,8 +2,6 @@ using UnityEngine;
 using System.Collections;
 
 public class ShakeTransform : MonoBehaviour {
-	public Transform target_transform;
-
 	public AnimationCurve pos_x_curve;
 	public float random_pos_x;
 	public AnimationCurve pos_y_curve;
@@ -21,47 +19,41 @@ public class ShakeTransform : MonoBehaviour {
 	public float time_ratio = 1f;
 
 	public AnimationCurve cameras_zoom_curve;
-	
-	Camera _camera_component = null;
 
-	void Awake()
+	void Start()
 	{
-		if (target_transform == null)
-			target_transform = transform;
-		_camera_component = target_transform.GetComponent<Camera>();
-		StartCoroutine(LaunchShake());
+//		StartCoroutine(LaunchShake(transform));
 	}
-	int _transformations_number = 0;
-	public IEnumerator LaunchShake()
+	public IEnumerator LaunchShake(Transform target_transform)
 	{
-		_transformations_number++;
-		StartCoroutine(LaunchMoveX());
+		ShakeCounter counter = new ShakeCounter();
+		counter._transformations_number = 0;
+		Camera _camera_component = target_transform.GetComponent<Camera>();
 
-		_transformations_number++;
-		StartCoroutine(LaunchMoveY());
+		counter._transformations_number++;
+		StartCoroutine(LaunchMoveX(target_transform, counter));
 
-		_transformations_number++;
-		StartCoroutine(LaunchScaleX());
+		counter._transformations_number++;
+		StartCoroutine(LaunchMoveY(target_transform, counter));
 
-		_transformations_number++;
-		StartCoroutine(LaunchScaleY());
+		counter._transformations_number++;
+		StartCoroutine(LaunchScaleX(target_transform, counter));
 
-		_transformations_number++;
-		StartCoroutine(LaunchRotate());
+		counter._transformations_number++;
+		StartCoroutine(LaunchScaleY(target_transform, counter));
+
+		counter._transformations_number++;
+		StartCoroutine(LaunchRotate(target_transform, counter));
 		if (_camera_component != null)
 		{
-			_transformations_number++;
-			StartCoroutine(LaunchCameraZoom());
+			counter._transformations_number++;
+			StartCoroutine(LaunchCameraZoom(target_transform, _camera_component, counter));
 		}
-		while (IsShakeFinished() == false)
+		while (counter._transformations_number != 0)
 			yield return null;
 	}
-	public bool IsShakeFinished()
-	{
-		return _transformations_number == 0;
-	}
 
-	public IEnumerator LaunchCameraZoom()
+	IEnumerator LaunchCameraZoom(Transform target_transform, Camera _camera_component, ShakeCounter counter)
 	{
 		float prev_value = _camera_component.orthographicSize;
 		
@@ -69,71 +61,74 @@ public class ShakeTransform : MonoBehaviour {
 			_camera_component.orthographicSize = Mathf.Lerp(0f, prev_value, val);
 		}, time_ratio));
 		_camera_component.orthographicSize = prev_value;
-		_transformations_number--;
+		counter._transformations_number--;
 	}
 	
-	public IEnumerator LaunchMoveX()
+	IEnumerator LaunchMoveX(Transform target_transform, ShakeCounter counter)
 	{
 		float prev_delta = 0;
 		
 		yield return StartCoroutine(CurveHelper.LaunchCurveApply(pos_x_curve, (time, val) => {
-			float delta = Random.Range(-random_pos_x, random_pos_x) + val * value_ratio;
+			float delta = (Random.Range(-random_pos_x, random_pos_x) + val) * value_ratio;
 			target_transform.position = new Vector3(target_transform.position.x - prev_delta + delta , target_transform.position.y, target_transform.position.z);
 			prev_delta = delta;
 		}, time_ratio));
 		target_transform.position = new Vector3(target_transform.position.x - prev_delta, target_transform.position.y, target_transform.position.z);
-		_transformations_number--;
+		counter._transformations_number--;
 	}
-	public IEnumerator LaunchMoveY()
+	IEnumerator LaunchMoveY(Transform target_transform, ShakeCounter counter)
 	{
 		float prev_delta = 0;
 		
 		yield return StartCoroutine(CurveHelper.LaunchCurveApply(pos_y_curve, (time, val) => {
-			float delta = Random.Range(-random_pos_y, random_pos_y) + val * value_ratio;
+			float delta = (Random.Range(-random_pos_y, random_pos_y) + val) * value_ratio;
 			target_transform.position = new Vector3(target_transform.position.x, target_transform.position.y - prev_delta + delta, target_transform.position.z);
 			prev_delta = delta;
 		}, time_ratio));
 		target_transform.position = new Vector3(target_transform.position.x, target_transform.position.y - prev_delta, target_transform.position.z);
-		_transformations_number--;
+		counter._transformations_number--;
 	}
 
-	public IEnumerator LaunchScaleX()
+	IEnumerator LaunchScaleX(Transform target_transform, ShakeCounter counter)
 	{
 		float prev_delta = 0;
 		
 		yield return StartCoroutine(CurveHelper.LaunchCurveApply(scale_x_curve, (time, val) => {
-			float delta = Random.Range(-random_scale_x, random_scale_x) + val * value_ratio;
+			float delta = (Random.Range(-random_scale_x, random_scale_x) + val) * value_ratio;
 			target_transform.localScale = new Vector3(target_transform.localScale.x - prev_delta + delta , target_transform.localScale.y, target_transform.localScale.z);
 			prev_delta = delta;
 		}, time_ratio));
 		target_transform.localScale = new Vector3(target_transform.localScale.x - prev_delta , target_transform.localScale.y, target_transform.localScale.z);
-		_transformations_number--;
+		counter._transformations_number--;
 	}
 
-	public IEnumerator LaunchScaleY()
+	IEnumerator LaunchScaleY(Transform target_transform, ShakeCounter counter)
 	{
 		float prev_delta = 0;
 		
 		yield return StartCoroutine(CurveHelper.LaunchCurveApply(scale_y_curve, (time, val) => {
-			float delta = Random.Range(-random_scale_y, random_scale_y) + val * value_ratio;
+			float delta = (Random.Range(-random_scale_y, random_scale_y) + val) * value_ratio;
 			target_transform.localScale = new Vector3(target_transform.localScale.x , target_transform.localScale.y - prev_delta + delta, target_transform.localScale.z);
 			prev_delta = delta;
 		}, time_ratio));
 		target_transform.localScale = new Vector3(target_transform.localScale.x , target_transform.localScale.y - prev_delta, target_transform.localScale.z);
-		_transformations_number--;
+		counter._transformations_number--;
 	}
 
 
-	public IEnumerator LaunchRotate()
+	IEnumerator LaunchRotate(Transform target_transform, ShakeCounter counter)
 	{
 		float prev_delta = 0;
 		
 		yield return StartCoroutine(CurveHelper.LaunchCurveApply(angle_curve, (time, val) => {
-			float delta = Random.Range(-random_angle, random_angle) + val * value_ratio;
+			float delta = (Random.Range(-random_angle, random_angle) + val) * value_ratio;
 			target_transform.localEulerAngles = new Vector3(target_transform.localEulerAngles.x , target_transform.localEulerAngles.y, target_transform.localEulerAngles.z - prev_delta + delta);
 			prev_delta = delta;
 		}, time_ratio));
 		target_transform.localEulerAngles = new Vector3(target_transform.localEulerAngles.x , target_transform.localEulerAngles.y, target_transform.localEulerAngles.z - prev_delta);
-		_transformations_number--;
+		counter._transformations_number--;
 	}
+}
+public class ShakeCounter{
+	public int _transformations_number = 0;
 }

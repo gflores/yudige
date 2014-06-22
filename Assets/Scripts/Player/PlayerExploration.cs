@@ -6,7 +6,8 @@ public class PlayerExploration : MonoBehaviour {
 	public static PlayerExploration instance;
 
 	public float move_speed = 1f;
-	public Animator main_animator;
+	public Animator generic_animator;
+	public Animator sprite_animator;
 	public SpriteRenderer main_renderer;
 	public Transform visuals_transform;
 	public Transform hitboxes_transform;
@@ -22,6 +23,7 @@ public class PlayerExploration : MonoBehaviour {
 	void FixedUpdate()
 	{
 		rigidbody2D.MovePosition(rigidbody2D.position + (_move_vector * move_speed * Time.deltaTime));
+		generic_animator.SetFloat("MoveSpeed", _move_vector.magnitude);
 	}
 	void Update()
 	{
@@ -56,12 +58,20 @@ public class PlayerExploration : MonoBehaviour {
 		else
 			_move_vector.y = 0f;
 
-		_move_vector.Normalize();
+		if (_move_vector != Vector2.zero)
+		{
+			_move_vector.Normalize();			
+			RotatePlayer(_move_vector);
+		}
+	}
+	public void RotatePlayer(Vector2 direction)
+	{
+		Rotater2D.LookAt(transform, transform.position + (Vector3)direction);
 	}
 	public void UpdateMosterExploration()
 	{
-		main_animator.runtimeAnimatorController = Player.instance.current_moster.GetAnimatorController();
-		main_renderer.color = Color.green;
+		sprite_animator.runtimeAnimatorController = Player.instance.current_moster.GetAnimatorController();
+//		main_renderer.color = Color.green;
 		hitboxes_transform.localScale = Player.instance.current_moster.exploration_collider.transform.localScale;
 		visuals_transform.localScale = Player.instance.current_moster.visuals_transform.localScale;
 	}

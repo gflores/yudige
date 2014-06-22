@@ -8,7 +8,6 @@ public class BattleExplorationTrigger : BaseExplorationTrigger {
 	{
 		if (agro_on_contact == true)
 		{
-			StateManager.instance.current_states.Remove(StateManager.State.EXPLORATION);
 			if (moster_data.moster_battle == null)
 				Debug.LogWarning("nullll");
 			BattleManager.instance.StartBattle(moster_data.moster_battle);

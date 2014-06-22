@@ -24,11 +24,14 @@ public class MosterData : MonoBehaviour {
 		moster_evolution = GetComponentInChildren<MosterEvolution>();
 
 		moster_battle.moster_data = this;
+		moster_battle.visuals_transform.localScale = visuals_transform.localScale;
+//		moster_battle.main_renderer.color = Color.red;
+		moster_battle.sprite_animator.runtimeAnimatorController = GetAnimatorController();//yoda
 
 		moster_exploration.moster_data = this;
 		moster_exploration.visuals_transform.localScale = visuals_transform.localScale;
-		moster_exploration.main_renderer.color = Color.red;
-		moster_exploration.main_animator.runtimeAnimatorController = GetAnimatorController();
+//		moster_exploration.main_renderer.color = Color.red;
+		moster_exploration.sprite_animator.runtimeAnimatorController = GetAnimatorController();
 
 		moster_evolution.moster_data = this;
 	}
