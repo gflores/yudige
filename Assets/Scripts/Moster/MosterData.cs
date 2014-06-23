@@ -15,7 +15,7 @@ public class MosterData : MonoBehaviour {
 	public NpcMosterBattle moster_battle {get; set;}
 	public NpcMosterExploration moster_exploration {get; set;}
 	public MosterEvolution moster_evolution {get; set;}
-	public Collider2D exploration_collider;
+	public Transform exploration_hitboxes_transform;
 
 	void Awake()
 	{

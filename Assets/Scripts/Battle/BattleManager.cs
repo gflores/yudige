@@ -62,6 +62,8 @@ public class BattleManager : MonoBehaviour {
 	}
 	IEnumerator Coroutine_StartBattle()
 	{
+		SoundManager.instance.PlayIndependant(SoundManager.instance.battle_start_sound);
+		SoundManager.instance.PlayIfDifferent(enemy_moster.battle_theme);
 		Vector3 previous_position = CameraManager.instance.exploration_camera.transform.position;
 		Vector3 dest_camera_position = (enemy_moster.moster_data.moster_exploration.main_renderer.transform.position + 
 		                                PlayerExploration.instance.main_renderer.transform.position) / 2;
@@ -74,6 +76,11 @@ public class BattleManager : MonoBehaviour {
 		yield return StartCoroutine(CameraManager.instance.COROUTINE_LaunchExplorationCameraStartBattleAnimation(intro_battle_exploration_time));
 
 		//ExplorationIntro finished
+		foreach(var defense_FX in defenses_FX)
+			defense_FX.Stop();
+		foreach(var attack_FX in attacks_FX)
+			attack_FX.Stop();
+
 		enemy_moster.SetupForBattle();
 		PlayerBattle.instance.SetupForBattle();
 		BattleScreen.instance.SetupForBattle();
@@ -160,7 +167,7 @@ public class BattleManager : MonoBehaviour {
 	public Transform battle_right_side_point;
 	float life_time_delta_for_burst_attack = 0.5f;
 	float speed_delta_for_burst_attack = 1f;
-	float extra_time_for_burst_attack = 0.5f;
+	float extra_time_for_burst_attack = 1f;
 	float extra_size_for_burst_attack = 0.5f;
 
 	IEnumerator Coroutine_AttackFX(ParticleSystem attack_FX, bool is_burst_attack)
@@ -173,12 +180,13 @@ public class BattleManager : MonoBehaviour {
 			attack_FX.startSize += extra_size_for_burst_attack;
 		}
 		attack_FX.Play();
+		SoundManager.instance.PlayIndependant(SoundManager.instance.attack_start_sound);
 		Vector3 dest_position = battle_right_side_point.position;
 		dest_position.x = player_visual_transform.position.x;
 		if (is_burst_attack == true)
 		{
 			TweenPosition.Begin(attack_FX.gameObject, 0.5f + extra_time_for_burst_attack, dest_position);
-			yield return new WaitForSeconds(0.2f + extra_time_for_burst_attack / 2f);
+			yield return new WaitForSeconds(extra_time_for_burst_attack);
 		}
 		else
 		{
@@ -198,6 +206,7 @@ public class BattleManager : MonoBehaviour {
 			enemy_has_element = false;
 			foreach(var defense_FX in defenses_FX)
 				defense_FX.Stop();
+			SoundManager.instance.PlayIndependant(SoundManager.instance.remove_element_sound);
 			yield return new WaitForSeconds(0.5f + extra_time_for_burst_attack);
 		}
 		else
@@ -219,14 +228,17 @@ public class BattleManager : MonoBehaviour {
 			switch (element_relation)
 			{
 			case ElementRelation.NORMAL:
+				SoundManager.instance.PlayIndependant(SoundManager.instance.normal_damage_sound);
 				StartCoroutine(SpecialEffectsManager.instance.normal_damage_shake.LaunchShake(PlayerBattle.instance.visuals_transform));
 				PlayerBattle.instance.TakeDamage(enemy_attack.damage - current_affinity);
 				break;
 			case ElementRelation.STRONG:
+				SoundManager.instance.PlayIndependant(SoundManager.instance.strong_damage_sound);
 				StartCoroutine(SpecialEffectsManager.instance.critical_damage_shake.LaunchShake(PlayerBattle.instance.visuals_transform));
 				PlayerBattle.instance.TakeDamage((enemy_attack.damage * 2) + current_affinity);
 				break;
 			case ElementRelation.WEAK:
+				SoundManager.instance.PlayIndependant(SoundManager.instance.weak_damage_sound);
 				PlayerBattle.instance.generic_animator.SetTrigger("StayStill");
 				PlayerBattle.instance.TakeDamage((enemy_attack.damage / 2) - current_affinity);
 				break;
@@ -235,6 +247,7 @@ public class BattleManager : MonoBehaviour {
 		}
 		else
 		{
+			SoundManager.instance.PlayIndependant(SoundManager.instance.normal_damage_sound);
 			StartCoroutine(SpecialEffectsManager.instance.normal_damage_shake.LaunchShake(PlayerBattle.instance.visuals_transform));
 			PlayerBattle.instance.TakeDamage(enemy_attack.damage);
 			//NEUTRAL
@@ -249,12 +262,13 @@ public class BattleManager : MonoBehaviour {
 	public void EnemyChangeElement(Element new_element)
 	{
 		ParticleSystem defense_fx = defenses_FX[(int) new_element];
-			
-			foreach(var defense_FX in defenses_FX)
-				defense_FX.Stop();
-			defense_fx.Play();
-			if (enemy_has_element == true)
-			Debug.LogWarning("enemy change element from: " + enemy_current_element + "to: " + new_element);
+
+		SoundManager.instance.PlayIndependant(SoundManager.instance.change_element_sound);
+		foreach(var defense_FX in defenses_FX)
+			defense_FX.Stop();
+		defense_fx.Play();
+		if (enemy_has_element == true)
+		Debug.LogWarning("enemy change element from: " + enemy_current_element + "to: " + new_element);
 		else
 			Debug.LogWarning("enemy change element from NEUTRAL to: " + new_element);
 		enemy_has_element = true;
@@ -279,19 +293,23 @@ public class BattleManager : MonoBehaviour {
 		InteruptBattleCoroutines();
 		StateManager.instance.current_states.Add(StateManager.State.SCRIPTED_EVENT);
 		StateManager.instance.UpdateFromStates();
+		CameraManager.instance.battle_gui_camera.enabled = false;
 		StartCoroutine(Coroutine_EnemyDeathScene());
 	}
 
 	IEnumerator Coroutine_EnemyDeathScene()
 	{
+		SoundManager.instance.PlayIfDifferent(SoundManager.instance.enemy_death_music);
 		SpecialEffectsManager.instance.moster_transformation_shake.time_ratio = 1 / 4f;
 		StartCoroutine(SpecialEffectsManager.instance.moster_transformation_shake.LaunchShake(enemy_moster.visuals_transform));
 		enemy_moster.generic_animator.SetBool("IsSick", true);
+		SoundManager.instance.PlayIndependant(SoundManager.instance.death_sfx);
 		yield return StartCoroutine(SpecialEffectsManager.instance.Coroutine_StartTweenAlpha(
 			enemy_moster.main_renderer,
 			1f, 0f, 2f));
 		
 		yield return new WaitForSeconds(2f);
+		enemy_moster.moster_data.moster_exploration.gameObject.SetActive(false);
 
 		enemy_moster.generic_animator.SetBool("IsSick", false);
 
@@ -305,7 +323,7 @@ public class BattleManager : MonoBehaviour {
 
 		StartCoroutine(CameraManager.instance.COROUTINE_MainCameraFadeToTransparent(1f));
 		yield return StartCoroutine(CameraManager.instance.COROUTINE_LaunchExplorationCameraEndBattleAnimation(1f));
-
+		GameManager.instance.current_screen.MakeGoTo();
 		StateManager.instance.current_states.Remove(StateManager.State.SCRIPTED_EVENT);
 		StateManager.instance.UpdateFromStates();
 		EndBattle();
@@ -338,6 +356,7 @@ public class BattleManager : MonoBehaviour {
 	}
 	public void EndBattle()
 	{
+		enemy_moster.visuals_transform.position = new Vector2(-99999, 999999);
 		PlayerBattle.instance.is_shield_live = false;
 		InteruptBattleCoroutines();
 		StateManager.instance.current_states.Remove(StateManager.State.BATTLE);

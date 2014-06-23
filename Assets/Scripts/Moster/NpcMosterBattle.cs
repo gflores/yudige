@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class NpcMosterBattle : MonoBehaviour {
+	public AudioSource battle_theme;
 	public MosterData moster_data{get; set;}
 	public int life = 100;
 	public float approx_nb_attack_before_burst = 20;

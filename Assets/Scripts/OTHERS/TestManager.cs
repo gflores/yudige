@@ -66,17 +66,17 @@ public class TestManager : MonoBehaviour {
 		}
 		if (Input.GetKey(KeyCode.RightShift))
 		{
-			if (Input.GetKey(KeyCode.A))
+			if (Input.GetKeyDown(KeyCode.A))
 			{
 				CameraManager.instance.SetColorToFadePlane(Color.red);
 				 StartCoroutine(CameraManager.instance.COROUTINE_MainCameraFadeToTransparent());
 			}
-			if (Input.GetKey(KeyCode.Z))
+			if (Input.GetKeyDown(KeyCode.Z))
 			{
 				CameraManager.instance.SetColorToFadePlane(Color.blue);
 				StartCoroutine(CameraManager.instance.COROUTINE_MainCameraFadeToOpaque(3f));
 			}
-			if (Input.GetKey(KeyCode.D))
+			if (Input.GetKeyDown(KeyCode.D))
 			{
 				Debug.LogWarning("TEST: player death");
 				Player.instance.LaunchDeath();
