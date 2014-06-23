@@ -76,6 +76,7 @@ public class BattleManager : MonoBehaviour {
 		//ExplorationIntro finished
 		enemy_moster.SetupForBattle();
 		PlayerBattle.instance.SetupForBattle();
+		BattleScreen.instance.SetupForBattle();
 		if (regular_enemy_routine == true)
 			StartCoroutine(Coroutine_EnemyLoop());
 		StateManager.instance.current_states.Remove(StateManager.State.EXPLORATION);
