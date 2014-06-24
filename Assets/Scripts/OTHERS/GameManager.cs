@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour {
 		{
 			SetGameFromSaveData();
 		}
+		PlayerExploration.instance.transform.position = GameManager.instance.rebirth_spawn_point.transform.position;
 		rebirth_screen.MakeGoTo();
 		StateManager.instance.current_states.Add(StateManager.State.EXPLORATION);
 		StateManager.instance.UpdateFromStates();

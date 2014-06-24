@@ -14,15 +14,18 @@ public class PlayerExploration : MonoBehaviour {
 
 	public bool can_control = true;
 	Vector2 _move_vector;
-
+	Transform _transform;
 	void Awake()
 	{
+		_transform = transform;
 		instance = this;
 	}
 
 	void FixedUpdate()
 	{
-		rigidbody2D.MovePosition(rigidbody2D.position + (_move_vector * move_speed * Time.deltaTime));
+//		rigidbody2D.MovePosition(rigidbody2D.position + (_move_vector * move_speed * Time.deltaTime));
+		rigidbody2D.velocity = _move_vector * move_speed * Time.deltaTime;
+
 		generic_animator.SetFloat("MoveSpeed", _move_vector.magnitude);
 	}
 	void Update()
@@ -31,6 +34,7 @@ public class PlayerExploration : MonoBehaviour {
 			CheckControls();
 		else
 			_move_vector = Vector2.zero;
+//		_transform.position += (Vector3)_move_vector * move_speed * Time.deltaTime;
 	}
 	public void EnableControls()
 	{
