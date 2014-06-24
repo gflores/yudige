@@ -159,7 +159,7 @@ public class BattleManager : MonoBehaviour {
 		TimelineEvent timeline_event_to_schedule;
 		
 		timeline_event_to_schedule = new TimelineEvent();
-		timeline_event_to_schedule.name = attack_to_schedule.damage.ToString();
+		timeline_event_to_schedule.name = "fuck you";//attack_to_schedule.element.ToString() + " ("+attack_to_schedule.damage.ToString() + ")";
 		timeline_event_to_schedule.time_remaining = EventsTimeline.instance.total_time;
 		timeline_event_to_schedule.on_complete_routine = Coroutine_EnemyAttackEffects(attack_to_schedule);
 		EventsTimeline.instance.Schedule(timeline_event_to_schedule);

@@ -3,12 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
+	public bool standalone_scene_mode = true;
 	public static GameManager instance;
+	public float auto_save_frequency_time = 2f;
 	public int player_starting_life = 100;
 	public MosterData starting_moster;
 	public MosterData baby_moster;
 	public ExplorationScreen rebirth_screen;
 	public Transform rebirth_spawn_point;
+	public ExplorationScreen tuto_screen;
+	public Transform tuto_spawn_point;
+	
 	public Camera main_camera {get; set;}
 	public Camera exploration_camera {get; set;}
 	public Camera battle_gui_camera {get; set;}
@@ -16,14 +21,26 @@ public class GameManager : MonoBehaviour {
 	public ExplorationScreen current_screen {get; set;}
 	void Awake()
 	{
+		if (standalone_scene_mode == true)
+		{
+			Debug.LogWarning("STANDALONE SCENE MODE ACTIVE, VERSION DE DEBUG");
+		}
 		instance = this;
 		exploration_camera = GameObject.FindGameObjectWithTag("ExplorationCamera").camera;
 		battle_gui_camera = GameObject.FindGameObjectWithTag("BattleGUICamera").camera;
 		battle_element_camera = GameObject.FindGameObjectWithTag("BattleElementCamera").camera;
 		main_camera = GameObject.FindGameObjectWithTag("MainCamera").camera;
 	}
+	bool IsWantingNewGame()
+	{
+		if (standalone_scene_mode == true)
+			return SaveManager.current_saved_game.is_new_game;
+		else
+			return MasterGameManager.want_new_game;
+	}
 	void Start () {
-		if (SaveManager.current_saved_game.is_new_game == true)
+		Debug.LogWarning("new: " + IsWantingNewGame());
+		if (IsWantingNewGame())
 		{
 			InitForNewGame();
 		}
@@ -31,15 +48,44 @@ public class GameManager : MonoBehaviour {
 		{
 			SetGameFromSaveData();
 		}
-		PlayerExploration.instance.transform.position = GameManager.instance.rebirth_spawn_point.transform.position;
-		rebirth_screen.MakeGoTo();
 		StateManager.instance.current_states.Add(StateManager.State.EXPLORATION);
 		StateManager.instance.UpdateFromStates();
 		Player.instance.RefreshMoster();
 		PlayerExploration.instance.UpdateMosterExploration();
-
+		StartCoroutine(AutoSaveContinuously());
 	}
-
+	IEnumerator AutoSaveContinuously()
+	{
+		while (true)
+		{
+			yield return new WaitForSeconds(auto_save_frequency_time);
+			SaveGame();
+		}
+	}
+	bool IsInTutorial(){
+		if (standalone_scene_mode)
+			return SaveManager.current_saved_game.is_in_tutorial == true;
+		else
+			return MasterGameManager.is_in_tutorial;
+	}
+	public Transform GetSpawnPoint()
+	{
+		if (IsInTutorial())
+			return tuto_spawn_point;
+		else
+			return rebirth_spawn_point;
+	}
+	public ExplorationScreen GetSpawnScreen()
+	{
+		if (IsInTutorial())
+			return tuto_screen;
+		else
+			return rebirth_screen;
+	}
+	public void PrepareGame()
+	{
+		
+	}
 	void InitForNewGame()
 	{
 		Debug.LogWarning("New game started !!");
@@ -47,6 +93,9 @@ public class GameManager : MonoBehaviour {
 		Player.instance.ApplyEvolutionChanges(starting_moster);
 		MostersManager.instance.eliminated_mosters_list = new List<MosterData>();
 		MostersManager.instance.evolved_mosters_list = new List<MosterData>();
+		PlayerExploration.instance.transform.position = GetSpawnPoint().position;
+		GetSpawnScreen().MakeGoTo();
+
 	}
 	public void SaveGame()
 	{
@@ -60,6 +109,8 @@ public class GameManager : MonoBehaviour {
 	}
 	public void SetGameFromSaveData()
 	{
+		PlayerExploration.instance.transform.position = SaveManager.current_saved_game.player_position;
+		ExplorationScreenManager.instance.IndexToExplorationScreen(SaveManager.current_saved_game.current_exploration_screen_index).MakeGoTo();
 		Player.instance.current_life = SaveManager.current_saved_game.current_life;
 		Player.instance.base_shield = SaveManager.current_saved_game.base_shield;
 		Player.instance.base_element_affinities = SaveManager.current_saved_game.base_element_affinities;
@@ -82,12 +133,16 @@ public class GameManager : MonoBehaviour {
 		{
 			if (SaveManager.current_saved_game.pickup_karmic_point_state_list[i] == false)
 			{
-				PickupKarmicPointManager.instance.pickup_karma_list[i].gameObject.SetActive(false);
+				PickupKarmicPointManager.instance.pickup_karma_list[i].Destroy();
 			}
 		}
 	}
 	public void SetSaveDataFromGame()
 	{
+		SaveManager.current_saved_game.player_position = PlayerExploration.instance.transform.position;
+		
+		SaveManager.current_saved_game.current_exploration_screen_index = ExplorationScreenManager.instance.ExplorationScreenToIndex(GameManager.instance.current_screen);
+		
 		SaveManager.current_saved_game.is_new_game = false;
 		SaveManager.current_saved_game.current_life = Player.instance.current_life;
 		SaveManager.current_saved_game.base_shield = Player.instance.base_shield;

@@ -9,6 +9,11 @@ public class TestManager : MonoBehaviour {
 	public Element battle_selected_element_for_defense;
 	public Element karma_boost_element_selected;
 	void Update () {
+		if (Input.GetKeyDown(KeyCode.End))
+		{
+			Application.LoadLevel(Application.loadedLevel);
+			Time.timeScale = 1;
+		}
 		if (Input.GetKey(KeyCode.LeftShift))
 	    {
 			if (Input.GetKeyDown(KeyCode.A))

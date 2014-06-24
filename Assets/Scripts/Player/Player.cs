@@ -221,8 +221,8 @@ public class Player : MonoBehaviour {
 		current_karma = MostersManager.instance.eliminated_mosters_list.Count + MostersManager.instance.evolved_mosters_list.Count;
 		ApplyEvolutionChanges(GameManager.instance.baby_moster);
 
-		GameManager.instance.rebirth_screen.MakeGoTo();
-		PlayerExploration.instance.transform.position = GameManager.instance.rebirth_spawn_point.transform.position;
+		GameManager.instance.GetSpawnScreen().MakeGoTo();
+		PlayerExploration.instance.transform.position = GameManager.instance.GetSpawnPoint().transform.position;
 		PlayerExploration.instance.RotatePlayer(Vector2.up);
 		
 	}

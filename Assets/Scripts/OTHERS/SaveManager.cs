@@ -58,6 +58,9 @@ public class SaveData{
 public class SavedGameData
 {
 	public bool is_new_game;
+	public bool is_in_tutorial;
+	public Vector2 player_position;
+	public int current_exploration_screen_index;
 	public int current_karma;
 	public int current_moster_index;
 	public int current_life;
@@ -74,6 +77,7 @@ public class SavedGameData
 		
 		save_game_data = new SavedGameData();
 		save_game_data.is_new_game = true;
+		save_game_data.is_in_tutorial = false;
 		save_game_data.eliminated_mosters_list = new List<int>();
 		save_game_data.evolved_mosters_list = new List<int>();
 
