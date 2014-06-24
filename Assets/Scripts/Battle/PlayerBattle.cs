@@ -285,6 +285,17 @@ public class PlayerBattle : MonoBehaviour {
 		}
 		return skills_available;
 	}
+	public List<Skill> GenerateSkillsAvailable(Element e)
+	{
+		List<Skill> skills_available = new List<Skill>();
+		
+		foreach (var skill in Player.instance.current_moster.skills)
+		{
+			if (skill.availaible == true && skill.element == e)
+				skills_available.Add(skill);
+		}
+		return skills_available;
+	}
 	public void TakeDamage(int damages)
 	{
 		if (is_shield_live == true)
