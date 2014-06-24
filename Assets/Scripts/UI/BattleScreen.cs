@@ -63,7 +63,7 @@ public class BattleScreen : MonoBehaviour
 			UILabel label = n.GetComponent<UILabel>();
 			label.text = e.name;
 			n.transform.SetParent(events_container);
-			n.transform.localPosition = new Vector3(70, -140 + e.time_remaining * 50);
+			n.transform.localPosition = new Vector3(70, -275 + (e.time_remaining / EventsTimeline.instance.total_time) * 550);
 			n.transform.localScale = new Vector3(20, 20, 1);
 		}
 	}
