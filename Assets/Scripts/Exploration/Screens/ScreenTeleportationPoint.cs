@@ -10,7 +10,10 @@ public class ScreenTeleportationPoint : MonoBehaviour {
 	{
 		if (linked_teleportation_point == null)
 			return ;
-		PlayerExploration.instance.transform.position = linked_teleportation_point.spawn_point.position;
-		linked_teleportation_point.exploration_screen.MakeGoTo();
+		if (GameManager.instance.current_screen == null || GameManager.instance.current_screen == exploration_screen)
+		{
+			PlayerExploration.instance.transform.position = linked_teleportation_point.spawn_point.position;
+			linked_teleportation_point.exploration_screen.MakeGoTo();
+		}
 	}
 }

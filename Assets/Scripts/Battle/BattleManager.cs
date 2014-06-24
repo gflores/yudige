@@ -58,7 +58,6 @@ public class BattleManager : MonoBehaviour {
 	IEnumerator Coroutine_IntroBattleExplorationFlash()
 	{
 		yield return StartCoroutine(CameraManager.instance.COROUTINE_MainCameraFadeToTransparent(intro_battle_exploration_time/2));
-		StartCoroutine(CameraManager.instance.COROUTINE_MainCameraFadeToOpaque(intro_battle_exploration_time/2));
 	}
 	IEnumerator Coroutine_StartBattle()
 	{
@@ -70,10 +69,13 @@ public class BattleManager : MonoBehaviour {
 		dest_camera_position.z = previous_position.z;
 		float initial_exploration_camera_size = CameraManager.instance.exploration_camera.orthographicSize;
 		Debug.LogWarning("init size: " + initial_exploration_camera_size);
-		TweenPosition.Begin(CameraManager.instance.exploration_camera.gameObject, intro_battle_exploration_time, dest_camera_position);
+
 		CameraManager.instance.SetColorToFadePlane(Color.white);
-		StartCoroutine(Coroutine_IntroBattleExplorationFlash());
-		yield return StartCoroutine(CameraManager.instance.COROUTINE_LaunchExplorationCameraStartBattleAnimation(intro_battle_exploration_time));
+
+		yield return StartCoroutine(Coroutine_IntroBattleExplorationFlash());
+		TweenPosition.Begin(CameraManager.instance.exploration_camera.gameObject, intro_battle_exploration_time / 2, dest_camera_position);
+		StartCoroutine(CameraManager.instance.COROUTINE_LaunchExplorationCameraStartBattleAnimation(intro_battle_exploration_time / 2 - 0.1f));
+		yield return StartCoroutine(CameraManager.instance.COROUTINE_MainCameraFadeToOpaque(intro_battle_exploration_time/2 +0.1f));
 
 		//ExplorationIntro finished
 		foreach(var defense_FX in defenses_FX)
@@ -349,6 +351,14 @@ public class BattleManager : MonoBehaviour {
 	}
 	public void InteruptBattleCoroutines()
 	{
+		foreach(var atk in PlayerBattle.instance.attacks_FX)
+			atk.Stop();
+		foreach(var atk in attacks_FX)
+			atk.Stop();
+		foreach(var atk in PlayerBattle.instance.defenses_FX)
+			atk.Stop();
+		foreach(var atk in defenses_FX)
+			atk.Stop();
 		StopAllCoroutines();
 		PlayerBattle.instance.StopAllCoroutines();
 		EventsTimeline.instance.StopAllCoroutines();

@@ -6,6 +6,7 @@ public class TeleportationExplorationTrigger : BaseExplorationTrigger {
 
 	protected override void OnPlayerEnter()
 	{
+
 		teleportation_point.TeleportToLinkedPoint();
 	}
 }

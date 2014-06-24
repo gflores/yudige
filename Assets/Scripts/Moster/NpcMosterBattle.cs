@@ -30,6 +30,7 @@ public class NpcMosterBattle : MonoBehaviour {
 
 	public void SetupForBattle()
 	{
+		generic_animator.SetBool("InBattle", true);
 		current_phase_attacks_elements = new List<Element>();
 		int prev_value = -99999999;
 		BattleManager.instance.enemy_current_life = life;

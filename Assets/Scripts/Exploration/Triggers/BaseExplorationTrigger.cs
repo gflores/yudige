@@ -2,12 +2,14 @@
 using System.Collections;
 
 public class BaseExplorationTrigger : MonoBehaviour {
+	public string tag_to_check;
 	protected virtual void OnPlayerEnter()
 	{
 	}
 	void  OnTriggerEnter2D(Collider2D other)
 	{
-		if (TagManager.ContainsTag(other, "TAG_player_trigger_hitbox") == true)
+		if ((tag_to_check == "" && TagManager.ContainsTag(other, "TAG_player_trigger_hitbox") == true) ||
+		    (tag_to_check != "" && TagManager.ContainsTag(other, tag_to_check) == true))
 		{
 			OnPlayerEnter();
 		}
@@ -18,7 +20,8 @@ public class BaseExplorationTrigger : MonoBehaviour {
 	}
 	void  OnTriggerExit2D(Collider2D other)
 	{
-		if (TagManager.ContainsTag(other, "TAG_player_trigger_hitbox") == true)
+		if ((tag_to_check == "" && TagManager.ContainsTag(other, "TAG_player_trigger_hitbox") == true) ||
+		    (tag_to_check != "" && TagManager.ContainsTag(other, tag_to_check) == true))
 		{
 			OnPlayerExit();
 		}

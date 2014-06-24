@@ -47,6 +47,7 @@ public class PlayerBattle : MonoBehaviour {
 
 	public void SetupForBattle()
 	{
+		generic_animator.SetBool("InBattle", true);
 		is_shield_live = true;
 		current_shield = Player.instance.GetEffectiveMaxShield();
 		has_element = false;
