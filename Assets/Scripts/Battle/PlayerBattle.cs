@@ -44,7 +44,14 @@ public class PlayerBattle : MonoBehaviour {
 			}
 		}
 	}
-
+	public void ResetAffinities()
+	{
+		Debug.LogWarning("RESETING AFFINITIES");
+	}
+	public void BurstAffinities()
+	{
+		Debug.LogWarning("BURST !!!!! AFFINITIES");
+	}
 	public void SetupForBattle()
 	{
 		generic_animator.SetBool("InBattle", true);
