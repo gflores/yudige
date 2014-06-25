@@ -167,10 +167,11 @@ public class BattleManager : MonoBehaviour {
 	public List<ParticleSystem> attacks_FX;
 	public Transform battle_left_side_point;
 	public Transform battle_right_side_point;
-	float life_time_delta_for_burst_attack = 0.5f;
-	float speed_delta_for_burst_attack = 1f;
-	float extra_time_for_burst_attack = 1f;
-	float extra_size_for_burst_attack = 0.5f;
+
+	public float life_time_delta_for_burst_attack = 0.5f;
+	public float speed_delta_for_burst_attack = 1f;
+	public float extra_time_for_burst_attack = 1f;
+	public float extra_size_for_burst_attack = 0.5f;
 
 	IEnumerator Coroutine_AttackFX(ParticleSystem attack_FX, bool is_burst_attack)
 	{
@@ -210,15 +211,12 @@ public class BattleManager : MonoBehaviour {
 				defense_FX.Stop();
 			SoundManager.instance.PlayIndependant(SoundManager.instance.remove_element_sound);
 			yield return new WaitForSeconds(0.5f + extra_time_for_burst_attack);
-		}
-		else
-			yield return new WaitForSeconds(0.5f);
-		if (enemy_attack.is_burst == true)
-		{
 			attack_FX.startLifetime -= life_time_delta_for_burst_attack;
 			attack_FX.startSpeed -= speed_delta_for_burst_attack;
 			attack_FX.startSize -= extra_size_for_burst_attack;
 		}
+		else
+			yield return new WaitForSeconds(0.5f);
 
 		last_enemy_attacked_applied = enemy_attack;
 		if (PlayerBattle.instance.has_element == true)

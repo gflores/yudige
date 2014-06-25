@@ -7,18 +7,26 @@ public class Skill : MonoBehaviour {
 	public int cost = 1;
 	public bool deals_damage = true;
 	public float damage_ratio = 1f;
+	public float combos_bonus_affinity_ratio = 1f;
 	public float cast_time = 1f;
-	public bool availaible = true;
+	public bool available = true;
+	public bool is_consumed = false;
 
-	public SkillEffects GetEffects()
+	public SkillEffects GetEffects(bool is_burst = false)
 	{
 		SkillEffects effects = new SkillEffects();
 
 		effects.deals_damage = deals_damage;
 //		Player.instance
-
-		float tmp_damages = (float)Player.instance.GetEffectiveElementAffinity(element) * damage_ratio;
-		effects.damages = Mathf.CeilToInt(tmp_damages);
+		if (is_burst == true)
+		{
+			effects.damages = PlayerBattle.instance.bonus_affinity_to_be_added_next;
+		}
+		else
+		{
+			float tmp_damages = (float)PlayerBattle.instance.GetEffectiveBattleElementAffinity(element) * damage_ratio;
+			effects.damages = Mathf.CeilToInt(tmp_damages);
+		}
 		effects.skill = this;
 		return effects;
 	}

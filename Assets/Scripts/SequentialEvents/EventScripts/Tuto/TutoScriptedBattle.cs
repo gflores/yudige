@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class TutoScriptedBattle : SequentialAction {
@@ -33,8 +33,8 @@ public class TutoScriptedBattle : SequentialAction {
 		for (int i = 0; i != (int) Element.Count; ++i)
 			PlayerBattle.instance.availaible_defense_elements[i] = false;
 		foreach(var skill in Player.instance.current_moster.skills)
-			skill.availaible = false;
-		light_skill_availaible.availaible = true;
+			skill.available = false;
+		light_skill_availaible.available = true;
 		StartCoroutine(EnemyRoutine());
 		yield return new WaitForSeconds(5f);
 
@@ -73,7 +73,7 @@ public class TutoScriptedBattle : SequentialAction {
 		Debug.LogWarning("block: 'ABS weak against VOID'");
 		yield return StartCoroutine(explain_weak_affinities.Coroutine_LaunchStartSequence());
 		Debug.LogWarning("Highlight: Fire attack");
-		fire_skill_availaible.availaible = true;
+		fire_skill_availaible.available = true;
 
 		yield return StartCoroutine(Coroutine_WaitEnemyTakeDamageInElement(Element.FIRE));
 //		Debug.LogWarning("WAITING FOR 'enemy take FIRE damage'");
@@ -96,7 +96,7 @@ public class TutoScriptedBattle : SequentialAction {
 //			yield return new WaitForSeconds(0.01f);
 		Debug.LogWarning("block: 'ABS is normal against ABS'");
 		yield return StartCoroutine(explain_normal_affinities.Coroutine_LaunchStartSequence());
-		dark_skill_availaible.availaible = true;
+		dark_skill_availaible.available = true;
 		Debug.LogWarning("Highlight: Void attack");
 		yield return StartCoroutine(Coroutine_WaitEnemyTakeDamageInElement(Element.DARK));
 		yield return new WaitForSeconds(2f);
@@ -173,7 +173,7 @@ public class TutoScriptedBattle : SequentialAction {
 		for (int i = 0; i != (int) Element.Count; ++i)
 			PlayerBattle.instance.availaible_defense_elements[i] = true;
 		foreach(var skill in Player.instance.current_moster.skills)
-			skill.availaible = true;
+			skill.available = true;
 		yield return new WaitForSeconds(0.001f);
 	}
 

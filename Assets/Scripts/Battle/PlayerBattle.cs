@@ -5,7 +5,7 @@ public class PlayerBattle : MonoBehaviour {
 	public static PlayerBattle instance;
 	public float time_passed_before_shield_recovery = 2f;
 	public float change_element_cast_time = 1f;
-
+	public float burst_cast_time = 5f;
 	public Animator generic_animator;
 	public Animator sprite_animator;
 	public SpriteRenderer main_renderer;
@@ -23,13 +23,18 @@ public class PlayerBattle : MonoBehaviour {
 	public Skill casted_skill {get; set;}
 	public List<bool> availaible_defense_elements {get; set;}
 	public SkillEffects last_skill_effect_applied {get; set;}
-
+	public int bonus_affinity_to_be_added_next {get; set;}
+	public List<int> current_affinity_combos_bonus {get; set;}
 	void Awake()
 	{
 		instance = this;
 		availaible_defense_elements = new List<bool>();
 		for (int i = 0; i != (int)Element.Count; ++i)
 			availaible_defense_elements.Add(true);
+		current_affinity_combos_bonus = new List<int>();
+		for (int i = 0; i != (int)Element.Count; ++i)
+			current_affinity_combos_bonus.Add(0);
+
 	}
 	float _time_passed_before_increase_shield;
 	void Update()
@@ -44,17 +49,48 @@ public class PlayerBattle : MonoBehaviour {
 			}
 		}
 	}
+	public int GetEffectiveBattleElementAffinity(Element e)
+	{
+		return Player.instance.GetEffectiveElementAffinity(e) + current_affinity_combos_bonus[(int)e];
+	}
 	public void ResetAffinities()
 	{
-		Debug.LogWarning("RESETING AFFINITIES");
+		ResetConsumedSkills();
+		for (int i = 0; i != (int)Element.Count; ++i)
+			current_affinity_combos_bonus[i] = 0;
+		StartCoroutine(Coroutine_RemoveElement());
 	}
 	public void BurstAffinities()
 	{
 		Debug.LogWarning("BURST !!!!! AFFINITIES");
+		ScheduleBurstAttack(last_skill_effect_applied.skill);
+	}
+	public void ScheduleBurstAttack(Skill skill_to_schedule)
+	{
+		TimelineEvent timeline_event_to_schedule;
+		
+		timeline_event_to_schedule = new TimelineEvent();
+		timeline_event_to_schedule.name = "BURST" + "(" +skill_to_schedule.skill_name +")";
+		timeline_event_to_schedule.side = TimelineSide.PLAYER;
+		timeline_event_to_schedule.event_type = TimelineEventType.PLAYER_BURST_ATTACK;
+		timeline_event_to_schedule.time_remaining = burst_cast_time;
+		timeline_event_to_schedule.on_complete_routine = Coroutine_SkillEffects(skill_to_schedule, true);
+		EventsTimeline.instance.Schedule(timeline_event_to_schedule);
+		
+		is_casting_skill = true;
+		casted_skill = skill_to_schedule;
+	}
+
+	void ResetConsumedSkills()
+	{
+		bonus_affinity_to_be_added_next = 0;
+		foreach(var skill in Player.instance.current_moster.skills)
+			skill.is_consumed = false;
 	}
 	public void SetupForBattle()
 	{
 		generic_animator.SetBool("InBattle", true);
+		ResetAffinities();
 		is_shield_live = true;
 		current_shield = Player.instance.GetEffectiveMaxShield();
 		has_element = false;
@@ -78,19 +114,24 @@ public class PlayerBattle : MonoBehaviour {
 			Debug.LogWarning("DENIED: already casting a skill !");
 			return ;
 		}
-		if (is_changing_element == true && element_changing_to == skill_clicked.element)
-		{
-			Debug.LogWarning("DENIED: already removing or changing this element to your defense");
-			return ;
-		}
-		if (has_element == true && skill_clicked.element == current_element)
-		{
-			Debug.LogWarning("DENIED: cannot use a skill with the same element as the current defense element");
-			return ;
-		}
-		if (skill_clicked.availaible == false)
+//		if (is_changing_element == true && element_changing_to == skill_clicked.element)
+//		{
+//			Debug.LogWarning("DENIED: already removing or changing this element to your defense");
+//			return ;
+//		}
+//		if (has_element == true && skill_clicked.element == current_element)
+//		{
+//			Debug.LogWarning("DENIED: cannot use a skill with the same element as the current defense element");
+//			return ;
+//		}
+		if (skill_clicked.available == false)
 		{
 			Debug.LogWarning("DENIED: the skill is deactivated");
+			return ;
+		}
+		if (skill_clicked.is_consumed == true)
+		{
+			Debug.LogWarning("DENIED: the skill has been consumed");
 			return ;
 		}
 		if (skill_clicked.cost >= Player.instance.current_life)
@@ -105,11 +146,16 @@ public class PlayerBattle : MonoBehaviour {
 
 	public void ScheduleSkill(Skill skill_to_schedule)
 	{
+		current_affinity_combos_bonus[(int)skill_to_schedule.element] += bonus_affinity_to_be_added_next;
+		StartCoroutine(Coroutine_ChangeElement(skill_to_schedule.element));
+		skill_to_schedule.is_consumed = true;
 		Player.instance.current_life = Mathf.Max(0, Player.instance.current_life - skill_to_schedule.cost);
 		TimelineEvent timeline_event_to_schedule;
 		
 		timeline_event_to_schedule = new TimelineEvent();
-		timeline_event_to_schedule.name = skill_to_schedule.skill_name;
+		timeline_event_to_schedule.name = "("+ skill_to_schedule.skill_name +")";
+		timeline_event_to_schedule.side = TimelineSide.PLAYER;
+		timeline_event_to_schedule.event_type = TimelineEventType.PLAYER_NORMAL_ATTACK;
 		timeline_event_to_schedule.time_remaining = skill_to_schedule.cast_time;
 		timeline_event_to_schedule.on_complete_routine = Coroutine_SkillEffects(skill_to_schedule);
 		EventsTimeline.instance.Schedule(timeline_event_to_schedule);
@@ -120,28 +166,65 @@ public class PlayerBattle : MonoBehaviour {
 
 	public List<ParticleSystem> attacks_FX {get; set;}
 
-	IEnumerator Coroutine_AttackFX(ParticleSystem attack_FX)
+	IEnumerator Coroutine_AttackFX(ParticleSystem attack_FX, bool is_burst_attack)
 	{
 		attack_FX.transform.position = BattleManager.instance.battle_right_side_point.position;
+		if (is_burst_attack == true)
+		{
+			attack_FX.startLifetime += BattleManager.instance.life_time_delta_for_burst_attack;
+			attack_FX.startSpeed += BattleManager.instance.speed_delta_for_burst_attack;
+			attack_FX.startSize += BattleManager.instance.extra_size_for_burst_attack;
+		}
+
 		attack_FX.Play();
 		Vector3 dest_position = BattleManager.instance.battle_right_side_point.position;
 		dest_position.x = BattleManager.instance.enemy_visual_transform.position.x;
 		SoundManager.instance.PlayIndependant(SoundManager.instance.attack_start_sound);
-		TweenPosition.Begin(attack_FX.gameObject, 0.5f, dest_position);
-		yield return new WaitForSeconds(0.2f);
+
+		if (is_burst_attack == true)
+		{
+			TweenPosition.Begin(attack_FX.gameObject, 0.5f + BattleManager.instance.extra_time_for_burst_attack, dest_position);
+			yield return new WaitForSeconds(BattleManager.instance.extra_time_for_burst_attack);
+		}
+		else
+		{
+			TweenPosition.Begin(attack_FX.gameObject, 0.5f, dest_position);
+			yield return new WaitForSeconds(0.2f);
+		}
 		attack_FX.Stop();
 		
 	}
 
-
-	IEnumerator Coroutine_SkillEffects(Skill skill)
+	public bool CanBurst()
 	{
-		StartCoroutine(Coroutine_AttackFX(attacks_FX[(int)skill.element]));
-		yield return new WaitForSeconds(0.5f);
+		return bonus_affinity_to_be_added_next != 0;
+	}
+	IEnumerator Coroutine_SkillEffects(Skill skill, bool is_burst = false)
+	{
+		ParticleSystem attack_FX = attacks_FX[(int)skill.element];
+		Debug.LogWarning("is_burst = "+ is_burst);
+		is_casting_skill = false;
+		casted_skill = null;
+
+		StartCoroutine(Coroutine_AttackFX(attack_FX, is_burst));
+		if (is_burst == true)
+		{
+			yield return new WaitForSeconds(0.5f + BattleManager.instance.extra_time_for_burst_attack);
+			ResetConsumedSkills();
+			attack_FX.startLifetime -= BattleManager.instance.life_time_delta_for_burst_attack;
+			attack_FX.startSpeed -= BattleManager.instance.speed_delta_for_burst_attack;
+			attack_FX.startSize -= BattleManager.instance.extra_size_for_burst_attack;
+
+		}
+		else
+			yield return new WaitForSeconds(0.5f);
+
+
 
 		SkillEffects skill_effects = skill.GetEffects();
 		last_skill_effect_applied = skill_effects;
-
+		if (is_burst == false)
+			bonus_affinity_to_be_added_next = Mathf.CeilToInt(((float)GetEffectiveBattleElementAffinity(skill.element)) * skill.combos_bonus_affinity_ratio);
 		if (skill_effects.deals_damage)
 		{
 			if (BattleManager.instance.enemy_has_element == true)
@@ -179,8 +262,6 @@ public class PlayerBattle : MonoBehaviour {
 			Debug.LogWarning("skill_effect: base_damage:" + skill_effects.damages);
 			Debug.LogWarning("new_boss_life: " + BattleManager.instance.enemy_current_life);
 		}
-		is_casting_skill = false;
-		casted_skill = null;
 
 
 		if (BattleManager.instance.CheckEnemyDeath() == false)
@@ -193,28 +274,29 @@ public class PlayerBattle : MonoBehaviour {
 
 	public void ClickOnElementDefense(Element element_clicked)
 	{
-		if (is_changing_element == true)
-		{
-			Debug.LogWarning("DENIED: already changing element !");
-			return ;
-		}
-		if (is_casting_skill == true && casted_skill.element == element_clicked)
-		{
-			Debug.LogWarning("DENIED: a skill of the same element is being casted !");
-			return ;
-		}
-		//OK
-
-		if (has_element == true && current_element == element_clicked)
-		{
-			Debug.LogWarning("want: back to NEUTRAL");
-			ScheduleRemoveElement();
-		}
-		else
-		{
-			Debug.LogWarning("want: change to: " + element_clicked);
-			ScheduleChangeElement(element_clicked);
-		}
+		Debug.LogWarning("USELESS NOW !!");
+//		if (is_changing_element == true)
+//		{
+//			Debug.LogWarning("DENIED: already changing element !");
+//			return ;
+//		}
+//		if (is_casting_skill == true && casted_skill.element == element_clicked)
+//		{
+//			Debug.LogWarning("DENIED: a skill of the same element is being casted !");
+//			return ;
+//		}
+//		//OK
+//
+//		if (has_element == true && current_element == element_clicked)
+//		{
+//			Debug.LogWarning("want: back to NEUTRAL");
+//			ScheduleRemoveElement();
+//		}
+//		else
+//		{
+//			Debug.LogWarning("want: change to: " + element_clicked);
+//			ScheduleChangeElement(element_clicked);
+//		}
 	}
 	void ScheduleChangeElement(Element element)
 	{
@@ -287,7 +369,7 @@ public class PlayerBattle : MonoBehaviour {
 
 		foreach (var skill in Player.instance.current_moster.skills)
 		{
-			if (skill.availaible == true)
+			if (skill.available == true)
 				skills_available.Add(skill);
 		}
 		return skills_available;
@@ -298,7 +380,7 @@ public class PlayerBattle : MonoBehaviour {
 		
 		foreach (var skill in Player.instance.current_moster.skills)
 		{
-			if (skill.availaible == true && skill.element == e)
+			if (skill.available == true && skill.element == e && skill.is_consumed == false)
 				skills_available.Add(skill);
 		}
 		return skills_available;

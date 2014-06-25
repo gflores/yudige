@@ -33,8 +33,18 @@ public class TestManager : MonoBehaviour {
 			}
 			if (Input.GetKeyDown(KeyCode.R))
 			{
-				Debug.LogWarning("TEST start battle");
+				Debug.LogWarning("TEST END battle");
 				BattleManager.instance.EndBattle();
+			}
+			if (Input.GetKeyDown(KeyCode.B))
+			{
+				Debug.LogWarning("TEST BURST");
+				PlayerBattle.instance.BurstAffinities();
+			}
+			if (Input.GetKeyDown(KeyCode.N))
+			{
+				Debug.LogWarning("TEST RESET");
+				PlayerBattle.instance.ResetAffinities();
 			}
 
 			if (Input.GetKeyDown(KeyCode.D))
