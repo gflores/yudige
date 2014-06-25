@@ -26,5 +26,6 @@ public class SkillPanel : MonoBehaviour
 	void AffinityChange()
 	{
 		PlayerBattle.instance.ClickOnElementDefense (element);
+		BattleScreen.instance.DamageToBoss ("ma tete");
 	}
 }

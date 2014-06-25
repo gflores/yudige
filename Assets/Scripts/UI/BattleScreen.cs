@@ -96,6 +96,16 @@ public class BattleScreen : MonoBehaviour
 		tweener.transform.localPosition = new Vector3 (0, 0, 0);
 	}
 
+	void Burst()
+	{
+		PlayerBattle.instance.BurstAffinities ();
+	}
+
+	void ResetAffinities()
+	{
+		PlayerBattle.instance.ResetAffinities();
+	}
+
 
 
 
