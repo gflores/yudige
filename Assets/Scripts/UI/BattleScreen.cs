@@ -12,6 +12,8 @@ public class BattleScreen : MonoBehaviour
 	public UILabel health_label;
 	public Transform events_container;
 	public UILabel event_template;
+	public UILabel player_damage;
+	public UILabel boss_damage;
 
 	void Awake()
 	{
@@ -67,6 +69,34 @@ public class BattleScreen : MonoBehaviour
 			n.transform.localScale = new Vector3(20, 20, 1);
 		}
 	}
+
+	public void DamageToPlayer(object to_display)
+	{
+		DisplayDamage (player_damage, to_display);
+	}
+
+	public void DamageToBoss(object to_display)
+	{
+		DisplayDamage (boss_damage, to_display);
+	}
+
+	private void DisplayDamage(UILabel lbl, object to_display)
+	{
+		lbl.gameObject.SetActive (true);
+		lbl.text = to_display.ToString ();
+		TweenPosition tp = TweenPosition.Begin(lbl.gameObject, 1, new Vector3(50,50, 0));
+		tp.onFinished += OnAnimFinishedHandler;
+		tp.method = UITweener.Method.BounceIn;
+	}
+
+	public void OnAnimFinishedHandler(UITweener tweener)
+	{
+
+		tweener.gameObject.SetActive (false);
+		tweener.transform.localPosition = new Vector3 (0, 0, 0);
+	}
+
+
 
 
 }
