@@ -23,7 +23,7 @@ public class SkillPanel : MonoBehaviour
 		slot1.gameObject.SetActive (slot1.sk != null);
 		slot2.gameObject.SetActive (slot2.sk != null);
 		slot3.gameObject.SetActive (slot3.sk != null);
-		affinity_label.text = Player.instance.GetEffectiveElementAffinity(element).ToString();
+		affinity_label.text = PlayerBattle.instance.GetEffectiveBattleElementAffinity(element).ToString();
 
 	}
 
@@ -31,6 +31,6 @@ public class SkillPanel : MonoBehaviour
 	{
 		PlayerBattle.instance.ClickOnElementDefense (element);
 		BattleScreen.instance.DamageToBoss ("ma tete");
-		PopupDialog.instance.Show ();
+		PopupText.instance.Show (0,0, 200, 50);
 	}
 }

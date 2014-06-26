@@ -2,10 +2,24 @@
 using System.Collections;
 using System.Collections.Generic;
 
+public enum TimelineSide {
+	PLAYER,
+	ENEMY
+}
+public enum TimelineEventType {
+	ENEMY_SIMPLE_ATTACK,
+	ENEMY_BURST_ATTACK,
+	PLAYER_NORMAL_ATTACK,
+	PLAYER_BURST_ATTACK,
+	PLAYER_CANCEL_COMBOS,
+}
+
 [System.Serializable]
 public class TimelineEvent{
 	public float time_remaining;
 	public string name;
+	public TimelineSide side;
+	public TimelineEventType event_type;
 	public IEnumerator on_complete_routine;
 }
 

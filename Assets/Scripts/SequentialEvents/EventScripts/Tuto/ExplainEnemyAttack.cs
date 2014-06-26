@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ExplainEnemyLaunchChangeElement : SequentialEventValidate {
+public class ExplainEnemyAttack : SequentialEventValidate {
 	protected override IEnumerable ActionList()
 	{
 		OnStartEvent();
@@ -9,7 +9,7 @@ public class ExplainEnemyLaunchChangeElement : SequentialEventValidate {
 		
 		yield return StartCoroutine(_0());		
 		yield return StartCoroutine(_EndSequence());
-
+		
 		//End
 		OnEndEvent();
 	}
@@ -20,7 +20,7 @@ public class ExplainEnemyLaunchChangeElement : SequentialEventValidate {
 	}
 	
 	IEnumerator _0(){
-		Debug.LogWarning("IN block-ExplainEnemyLaunchChangeElement");
+		Debug.LogWarning("IN block-ExplainEnemyAttack");
 		yield return null;
 	}
 }

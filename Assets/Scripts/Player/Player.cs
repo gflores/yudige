@@ -80,12 +80,12 @@ public class Player : MonoBehaviour {
 		//yield return StartCoroutine(CameraManager.instance.COROUTINE_ExplorationPlaneBehindToOpaque(2f));
 		SoundManager.instance.PlayIndependant(SoundManager.instance.evolution_sfx);
 
-		SpecialEffectsManager.instance.moster_transformation_shake.time_ratio = 1 / 4f;
+		SpecialEffectsManager.instance.moster_transformation_shake.time_ratio = 1 / 6f;
 		StartCoroutine(SpecialEffectsManager.instance.moster_transformation_shake.LaunchShake(PlayerExploration.instance.visuals_transform));
 		PlayerExploration.instance.generic_animator.SetBool("IsSick", true);
-		yield return new WaitForSeconds(2f);
+		yield return new WaitForSeconds(3f);
 		CameraManager.instance.SetColorToFadePlane(Color.white);
-		yield return StartCoroutine(CameraManager.instance.COROUTINE_MainCameraFadeToOpaque(2f));
+		yield return StartCoroutine(CameraManager.instance.COROUTINE_MainCameraFadeToOpaque(3f));
 		PlayerExploration.instance.generic_animator.SetBool("IsSick", false);
 		//apply change
 		MostersManager.instance.AddToEvolved(current_moster);

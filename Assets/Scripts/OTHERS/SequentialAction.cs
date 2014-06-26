@@ -17,10 +17,14 @@ public class SequentialAction : MonoBehaviour
 	}
 	void Start()
 	{
-		_actions_enumerator = ActionList().GetEnumerator();
+		Reinit();
 		_can_do_next_action = true;
 		MakeStart();
 		AfterMakeStart();
+	}
+	public void Reinit()
+	{
+		_actions_enumerator = ActionList().GetEnumerator();
 	}
 	virtual protected void MakeStart()
 	{

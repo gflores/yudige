@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class TutoScriptedBattle : SequentialAction {
@@ -8,14 +8,15 @@ public class TutoScriptedBattle : SequentialAction {
 	public Skill light_skill_availaible;
 	public Skill dark_skill_availaible;
 	public Skill fire_skill_availaible;
-	public SequentialEventValidate explain_timeline;
-	public SequentialEventValidate explain_on_player_take_damage;
-	public SequentialEventValidate explain_enemy_launched_change_element;
-	public SequentialEventValidate explain_enemy_changed_to_void;
-	public SequentialEventValidate explain_weak_affinities;
-	public SequentialEventValidate explain_strong_affinities;
-	public SequentialEventValidate explain_normal_affinities;
-	public SequentialEventValidate explain_atk_def_deadlock;
+	public SequentialEventValidate explain_wait_for_skill;
+	public SequentialEventValidate explain_enemy_took_damage;
+	public SequentialEventValidate explain_combos_bonus;
+	public SequentialEventValidate explain_burst_attack;
+	public SequentialEventValidate explain_burst_reset;
+	public SequentialEventValidate explain_enemy_attack;
+	public SequentialEventValidate explain_shield;
+	public SequentialEventValidate explain_reset;
+	public SequentialEventValidate explain_enemy_phase;
 
 	int enemy_routine_step = 0;
 
@@ -24,101 +25,68 @@ public class TutoScriptedBattle : SequentialAction {
 		yield return StartCoroutine(_0());
 		yield return StartCoroutine(_LAST());
 	}
+	IEnumerator Coroutine_WrappedWaitFromSkillToDamage(Element skill_element)
+	{
+		while (PlayerBattle.instance.is_casting_skill == true)
+			yield return new WaitForSeconds(0.001f);
+		PlayerBattle.instance.is_casting_skill = true;
+		yield return StartCoroutine(Coroutine_WaitEnemyTakeAnyDamage());
+		yield return new WaitForSeconds(1f);
+		PlayerBattle.instance.is_casting_skill = false;
+		Element enemy_element = BattleManager.instance.enemy_current_element;
+		Debug.LogWarning("Block: 'Enemy took damage'");
+		explain_enemy_took_damage.Reinit();
+		yield return StartCoroutine(explain_enemy_took_damage.Coroutine_LaunchStartSequence());
 
+	}
 	IEnumerator _0()
 	{
-		BattleManager.instance.regular_enemy_routine = false;
+		BattleManager.instance.pause_before_new_phase = true;
 		BattleManager.instance.StartBattle(moster_to_battle.moster_battle);
 		Debug.LogWarning("deactivating all element for defense");
-		for (int i = 0; i != (int) Element.Count; ++i)
-			PlayerBattle.instance.availaible_defense_elements[i] = false;
 		foreach(var skill in Player.instance.current_moster.skills)
-			skill.availaible = false;
-		light_skill_availaible.availaible = true;
-		StartCoroutine(EnemyRoutine());
-		yield return new WaitForSeconds(5f);
-
-		Debug.LogWarning("Block: 'Timeline'");
-		yield return StartCoroutine(explain_timeline.Coroutine_LaunchStartSequence());
-		StartCoroutine(Coroutine_CheckPlayerTakeDamage());
+			skill.available = false;
+		light_skill_availaible.available = true;
+		dark_skill_availaible.available = true;
+		fire_skill_availaible.available = true;
 		Debug.LogWarning("Highlight: 'Attack'");
-		Debug.LogWarning("WAITING FOR 'enemy take damage'");
-		while (PlayerBattle.instance.last_skill_effect_applied == null)
-			yield return new WaitForSeconds(0.01f);
-		Debug.LogWarning("WAITING FOR 'player launch another skill'");
-		while (PlayerBattle.instance.is_casting_skill == true)
-			yield return new WaitForSeconds(0.01f);
-		while (PlayerBattle.instance.is_casting_skill == false)
-			yield return new WaitForSeconds(0.01f);
-		enemy_routine_step = 1;
-		yield return new WaitForSeconds(attack_max_delay + 0.5f);
-		Debug.LogWarning("block: 'enemy launched change type'");
-		yield return StartCoroutine(explain_enemy_launched_change_element.Coroutine_LaunchStartSequence());
+		Element skill_element;
 
-		yield return StartCoroutine(Coroutine_WaitEnemyChangeElement(Element.DARK));
-//		Debug.LogWarning("WAITING FOR 'enemy type changed to VOID'");
-//		while (!(BattleManager.instance.enemy_has_element == true && BattleManager.instance.enemy_current_element == Element.DARK))
-//			yield return new WaitForSeconds(0.01f);
+		yield return StartCoroutine(Coroutine_WaitPlayerLaunchAnyAttack());
+		skill_element = PlayerBattle.instance.casted_skill.element;
+		Debug.LogWarning("Block: 'when a skill has been used, its unavailable'");
+		yield return StartCoroutine(explain_wait_for_skill.Coroutine_LaunchStartSequence());
+		yield return StartCoroutine(Coroutine_WrappedWaitFromSkillToDamage(skill_element));
 
-		Debug.LogWarning("block: 'enemy has changed type to VOID'");
-		PlayerBattle.instance.last_skill_effect_applied = null;
-		yield return StartCoroutine(explain_enemy_changed_to_void.Coroutine_LaunchStartSequence());
 
-		yield return StartCoroutine(Coroutine_WaitEnemyTakeDamageInElement(Element.LIGHT));
-//		Debug.LogWarning("WAITING FOR 'enemy take ABS damage'");
-//		while (!(PlayerBattle.instance.last_skill_effect_applied != null &&
-//		       PlayerBattle.instance.last_skill_effect_applied.skill.element == Element.LIGHT))
-//			yield return new WaitForSeconds(0.01f);
+		Debug.LogWarning("Highlight: 'note that your previous skill attack has been consumed once you used it. Choose another skill'");
+		yield return StartCoroutine(Coroutine_WaitPlayerLaunchAnyAttack());
+		skill_element = PlayerBattle.instance.casted_skill.element;
+		Debug.LogWarning("Block: 'explain combos_bonus'");
+		yield return StartCoroutine(explain_combos_bonus.Coroutine_LaunchStartSequence());
+		yield return StartCoroutine(Coroutine_WrappedWaitFromSkillToDamage(skill_element));
 
-		Debug.LogWarning("block: 'ABS weak against VOID'");
-		yield return StartCoroutine(explain_weak_affinities.Coroutine_LaunchStartSequence());
-		Debug.LogWarning("Highlight: Fire attack");
-		fire_skill_availaible.availaible = true;
 
-		yield return StartCoroutine(Coroutine_WaitEnemyTakeDamageInElement(Element.FIRE));
-//		Debug.LogWarning("WAITING FOR 'enemy take FIRE damage'");
-//		while (PlayerBattle.instance.last_skill_effect_applied.skill.element != Element.FIRE)
-//			yield return new WaitForSeconds(0.01f);
+		yield return StartCoroutine(Coroutine_WaitPlayerLaunchAnyAttack());
+		skill_element = PlayerBattle.instance.casted_skill.element;
+		Debug.LogWarning("Block: 'explain burst attack'");
+		yield return StartCoroutine(explain_burst_attack.Coroutine_LaunchStartSequence());
+		yield return StartCoroutine(Coroutine_WrappedWaitFromSkillToDamage(skill_element));
+		Debug.LogWarning("Block: 'when you burst, you reset'");
+		yield return StartCoroutine(explain_burst_reset.Coroutine_LaunchStartSequence());
 
-		Debug.LogWarning("block: 'FIRE strong against VOID'");
-		yield return StartCoroutine(explain_strong_affinities.Coroutine_LaunchStartSequence());
-		enemy_routine_step = 2;
-
-		yield return StartCoroutine(Coroutine_WaitEnemyChangeElement(Element.LIGHT));
-//		Debug.LogWarning("WAITING FOR 'enemy change to ABS defense");
-//		while (!(BattleManager.instance.enemy_has_element == true && BattleManager.instance.enemy_current_element == Element.LIGHT))
-//			yield return new WaitForSeconds(0.01f);
-
-		yield return StartCoroutine(Coroutine_WaitEnemyTakeDamageInElement(Element.LIGHT));
-//		Debug.LogWarning("WAITING FOR 'enemy take ABS'");
-//		while (!(PlayerBattle.instance.last_skill_effect_applied != null &&
-//		         PlayerBattle.instance.last_skill_effect_applied.skill.element == Element.LIGHT))
-//			yield return new WaitForSeconds(0.01f);
-		Debug.LogWarning("block: 'ABS is normal against ABS'");
-		yield return StartCoroutine(explain_normal_affinities.Coroutine_LaunchStartSequence());
-		dark_skill_availaible.availaible = true;
-		Debug.LogWarning("Highlight: Void attack");
-		yield return StartCoroutine(Coroutine_WaitEnemyTakeDamageInElement(Element.DARK));
+		yield return new WaitForSeconds(1f);
+		BattleManager.instance.pause_before_new_phase = false;
 		yield return new WaitForSeconds(2f);
-//		Debug.LogWarning("WAITING FOR 'enemy take VOID damage'");
-//		while (PlayerBattle.instance.last_skill_effect_applied.skill.element != Element.DARK)
-//			yield return new WaitForSeconds(0.01f);
-		PlayerBattle.instance.availaible_defense_elements[(int)Element.DARK] = true;
-		Debug.LogWarning("Highlight: 'you can change your element too'");
-		yield return StartCoroutine(Coroutine_WaitPlayerChangeElementTo(Element.DARK));
-
-//		Debug.LogWarning("WAITING FOR 'player change to VOID'");
-//		while (!(PlayerBattle.instance.has_element == true && PlayerBattle.instance.current_element == Element.DARK))
-//			yield return new WaitForSeconds(0.01f);
-
-		Debug.LogWarning("Block: 'can't attack and defend with the same type'");
-		yield return StartCoroutine(explain_atk_def_deadlock.Coroutine_LaunchStartSequence());
-		enemy_routine_step = 3;
-		Debug.LogWarning("WAITING FOR 'player take ROCK damage while being VOID'");
-		while (!(PlayerBattle.instance.has_element == true && PlayerBattle.instance.current_element == Element.DARK &&
-		         BattleManager.instance.last_enemy_attacked_applied.element == Element.ROCK))
-			yield return new WaitForSeconds(0.01f);
-		Debug.LogWarning("Highlight: 'you can go back to neutral if you want'");
+		Debug.LogWarning("Block: 'this is an enemy attack'");
+		yield return StartCoroutine(explain_enemy_attack.Coroutine_LaunchStartSequence());
+		yield return StartCoroutine(Coroutine_CheckPlayerTakeDamage());
+		yield return new WaitForSeconds(3f);
+		Debug.LogWarning("Block: you can also reset");
+		yield return StartCoroutine(explain_reset.Coroutine_LaunchStartSequence());
+		yield return new WaitForSeconds(3f);
+		Debug.LogWarning("Block: explain enemy phase");
+		yield return StartCoroutine(explain_enemy_phase.Coroutine_LaunchStartSequence());
 		ForceDoNextAction();
 	}
 	IEnumerator Coroutine_CheckPlayerTakeDamage()
@@ -126,7 +94,7 @@ public class TutoScriptedBattle : SequentialAction {
 		while (BattleManager.instance.last_enemy_attacked_applied == null)
 			yield return new WaitForSeconds(0.01f);
 		Debug.LogWarning("Block: 'Explain shield'");
-		yield return StartCoroutine(explain_on_player_take_damage.Coroutine_LaunchStartSequence());
+		yield return StartCoroutine(explain_shield.Coroutine_LaunchStartSequence());
 	}
 
 	IEnumerator Coroutine_WaitEnemyTakeDamageInElement(Element element)
@@ -136,6 +104,14 @@ public class TutoScriptedBattle : SequentialAction {
 		while (!(PlayerBattle.instance.last_skill_effect_applied != null &&
 		         PlayerBattle.instance.last_skill_effect_applied.skill.element == element))
 			yield return new WaitForSeconds(0.01f);
+	}
+	IEnumerator Coroutine_WaitEnemyTakeAnyDamage()
+	{
+		PlayerBattle.instance.skill_ended = false;
+
+		Debug.LogWarning("WAITING FOR 'enemy take any damage'");
+		while (PlayerBattle.instance.skill_ended == false)
+			yield return new WaitForSeconds(0.001f);
 	}
 	IEnumerator Coroutine_WaitEnemyChangeElement(Element element)
 	{
@@ -149,6 +125,13 @@ public class TutoScriptedBattle : SequentialAction {
 		while (!(PlayerBattle.instance.is_casting_skill == true && PlayerBattle.instance.casted_skill.element == element))
 			yield return new WaitForSeconds(0.01f);
 
+	}
+	IEnumerator Coroutine_WaitPlayerLaunchAnyAttack()
+	{
+		Debug.LogWarning("WAITING FOR 'player launch any skill'");
+		while (!(PlayerBattle.instance.is_casting_skill == true))
+			yield return new WaitForSeconds(0.01f);
+		
 	}
 
 	IEnumerator Coroutine_WaitPlayerChangeElementTo(Element element)
@@ -173,7 +156,7 @@ public class TutoScriptedBattle : SequentialAction {
 		for (int i = 0; i != (int) Element.Count; ++i)
 			PlayerBattle.instance.availaible_defense_elements[i] = true;
 		foreach(var skill in Player.instance.current_moster.skills)
-			skill.availaible = true;
+			skill.available = true;
 		yield return new WaitForSeconds(0.001f);
 	}
 
