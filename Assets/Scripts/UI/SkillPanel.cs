@@ -31,5 +31,6 @@ public class SkillPanel : MonoBehaviour
 	{
 		PlayerBattle.instance.ClickOnElementDefense (element);
 		BattleScreen.instance.DamageToBoss ("ma tete");
+		PopupDialog.instance.Show ();
 	}
 }

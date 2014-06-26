@@ -41,7 +41,7 @@ public class KarmaScreen : MonoBehaviour
 		fire_label.text = "Fire : " + Player.instance.GetEffectiveElementAffinity(Element.FIRE);
 		fire_increase_label.text = Player.instance.element_affinity_bonus_per_karma.ToString();
 
-		total_karma_label.text = Player.instance.current_karma.ToString();
+		total_karma_label.text = Player.instance.current_karma.ToString() + " Karma";
 
 
 	}
