@@ -73,34 +73,38 @@ public class PlayerBattle : MonoBehaviour {
 	}
 	public void ClickOnSkill(Skill skill_clicked)
 	{
+		if (IsSkillAvailable(skill_clicked) == true)
+			ScheduleSkill(skill_clicked);
+	}
+
+	public bool IsSkillAvailable(Skill skill_clicked)
+	{
 		if (is_casting_skill == true)
 		{
-			Debug.LogWarning("DENIED: already casting a skill !");
-			return ;
+			//Debug.LogWarning("DENIED: already casting a skill !");
+			return false;
 		}
 		if (is_changing_element == true && element_changing_to == skill_clicked.element)
 		{
-			Debug.LogWarning("DENIED: already removing or changing this element to your defense");
-			return ;
+			//Debug.LogWarning("DENIED: already removing or changing this element to your defense");
+			return false;
 		}
 		if (has_element == true && skill_clicked.element == current_element)
 		{
-			Debug.LogWarning("DENIED: cannot use a skill with the same element as the current defense element");
-			return ;
+			//Debug.LogWarning("DENIED: cannot use a skill with the same element as the current defense element");
+			return false;
 		}
 		if (skill_clicked.availaible == false)
 		{
-			Debug.LogWarning("DENIED: the skill is deactivated");
-			return ;
+			//Debug.LogWarning("DENIED: the skill is deactivated");
+			return false;
 		}
 		if (skill_clicked.cost >= Player.instance.current_life)
 		{
-			Debug.LogWarning("DENIED: would instantly kill the player because of the cost");
-			return ;
+			//Debug.LogWarning("DENIED: would instantly kill the player because of the cost");
+			return false;
 		}
-		//OK
-
-		ScheduleSkill(skill_clicked);
+		return true;
 	}
 
 	public void ScheduleSkill(Skill skill_to_schedule)
