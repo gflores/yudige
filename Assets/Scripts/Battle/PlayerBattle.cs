@@ -26,6 +26,7 @@ public class PlayerBattle : MonoBehaviour {
 	public SkillEffects last_skill_effect_applied {get; set;}
 	public int bonus_affinity_to_be_added_next {get; set;}
 	public List<int> current_affinity_combos_bonus {get; set;}
+	
 	void Awake()
 	{
 		instance = this;
@@ -153,38 +154,9 @@ public class PlayerBattle : MonoBehaviour {
 	}
 	public void ClickOnSkill(Skill skill_clicked)
 	{
-		if (is_casting_skill == true)
-		{
-			Debug.LogWarning("DENIED: already casting a skill !");
+		if (IsSkillAvailable(skill_clicked) == false)
 			return ;
-		}
-//		if (is_changing_element == true && element_changing_to == skill_clicked.element)
-//		{
-//			Debug.LogWarning("DENIED: already removing or changing this element to your defense");
-//			return ;
-//		}
-//		if (has_element == true && skill_clicked.element == current_element)
-//		{
-//			Debug.LogWarning("DENIED: cannot use a skill with the same element as the current defense element");
-//			return ;
-//		}
-		if (skill_clicked.available == false)
-		{
-			Debug.LogWarning("DENIED: the skill is deactivated");
-			return ;
-		}
-		if (skill_clicked.is_consumed == true)
-		{
-			Debug.LogWarning("DENIED: the skill has been consumed");
-			return ;
-		}
-		if (skill_clicked.cost >= Player.instance.current_life)
-		{
-			Debug.LogWarning("DENIED: would instantly kill the player because of the cost");
-			return ;
-		}
-		//OK
-		Debug.LogWarning("COUNT: " + GenerateSkillsAvailable().Count);
+
 		if (GenerateSkillsAvailable().Count == 1)
 		{
 			Debug.LogWarning("last skill, BURST !");
@@ -458,5 +430,15 @@ public class PlayerBattle : MonoBehaviour {
 		else
 			Player.instance.current_life = Mathf.Max(0, Player.instance.current_life - damages);
 		BattleScreen.instance.DamageToPlayer(damages);
+	}
+	
+	public bool IsSkillAvailable(Skill skill_clicked)
+	{
+		if (is_casting_skill == true)
+		{
+			//Debug.LogWarning("DENIED: already casting a skill !");
+			return false;
+		}
+		return true;
 	}
 }

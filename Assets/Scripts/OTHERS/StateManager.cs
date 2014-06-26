@@ -58,6 +58,14 @@ public class StateManager : MonoBehaviour {
 			GameManager.instance.battle_element_camera.enabled = false;
 			BattleTimeFlowing(true);
 		}
+		if (current_states.Contains(State.USE_KARMA_MENU) == true)
+		{
+			GameManager.instance.karma_camera.enabled = true;
+		}
+		else
+		{
+			GameManager.instance.karma_camera.enabled = false;
+		}
 		if (current_states.Contains(State.SCRIPTED_EVENT) == true)
 		{
 			ExplorationTimeFlowing(false);

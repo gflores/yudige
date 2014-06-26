@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour {
 	public Camera battle_gui_camera {get; set;}
 	public Camera battle_element_camera {get; set;}
 	public ExplorationScreen current_screen {get; set;}
+	public Camera karma_camera {get; set;}
+	public Camera popup_camera {get; set;}
 	void Awake()
 	{
 		if (standalone_scene_mode == true)
@@ -30,6 +32,7 @@ public class GameManager : MonoBehaviour {
 		battle_gui_camera = GameObject.FindGameObjectWithTag("BattleGUICamera").camera;
 		battle_element_camera = GameObject.FindGameObjectWithTag("BattleElementCamera").camera;
 		main_camera = GameObject.FindGameObjectWithTag("MainCamera").camera;
+		karma_camera = GameObject.FindGameObjectWithTag("KarmaCamera").camera;
 	}
 	bool IsWantingNewGame()
 	{

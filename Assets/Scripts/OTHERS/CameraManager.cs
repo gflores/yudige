@@ -11,6 +11,8 @@ public class CameraManager : MonoBehaviour {
 	public Camera exploration_camera {get; set;}
 	public Camera battle_gui_camera {get; set;}
 	public Camera battle_element_camera {get; set;}
+	public Camera karma_camera {get; set;}
+	public Camera popup_camera {get; set;}
 
 	SpriteRenderer main_camera_plane_sprite_renderer;
 	SpriteRenderer exploration_plane_behind_player_sprite_renderer;
@@ -30,6 +32,8 @@ public class CameraManager : MonoBehaviour {
 
 		main_camera = GameObject.FindGameObjectWithTag("MainCamera").camera;
 		main_camera_plane_sprite_renderer = main_camera_fade_animation.GetComponent<SpriteRenderer>();
+
+		karma_camera = GameObject.FindGameObjectWithTag("KarmaCamera").camera;
 
 		exploration_plane_behind_player_sprite_renderer = exploration_plane_behind_player_animation.GetComponent<SpriteRenderer>();
 	}
