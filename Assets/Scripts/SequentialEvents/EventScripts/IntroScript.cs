@@ -16,8 +16,8 @@ public class IntroScript : SequentialEventValidate {
 		yield return StartCoroutine(_3());
 
 		//End
-		OnEndEvent();
 		yield return StartCoroutine(_EndSequence());
+		OnEndEvent();
 	}
 	IEnumerator _EndSequence(){
 		CameraManager.instance.SetColorToFadePlane(new Color(0, 0, 0, 0));
@@ -26,22 +26,25 @@ public class IntroScript : SequentialEventValidate {
 	}
 
 	IEnumerator _0(){
-		CameraManager.instance.SetColorToFadePlane(Color.black);
-		Debug.LogWarning("Text1");
+		PopupDialog.instance.name_label.text = "Ta mere";
+		PopupDialog.instance.text_label.text = "salut !";
+		PopupDialog.instance.Show ();
 		yield return new WaitForSeconds(0.001f);
 	}
 	IEnumerator _1(){
-		Debug.LogWarning("Text2");
+		PopupDialog.instance.name_label.text = "Ta mere";
+		PopupDialog.instance.text_label.text = "Tu est gay.";
 		yield return new WaitForSeconds(0.001f);
 	}
 	IEnumerator _2(){
-		yield return StartCoroutine(CameraManager.instance.COROUTINE_MainCameraFadeToTransparent(3f));
-		Debug.LogWarning("Press W for blabla");
+		PopupDialog.instance.Hide();
+//		yield return StartCoroutine(CameraManager.instance.COROUTINE_MainCameraFadeToTransparent(3f));
+//		Debug.LogWarning("Press W for blabla");
 		yield return new WaitForSeconds(0.001f);
 	}
 	IEnumerator _3(){
-		CameraManager.instance.SetColorToFadePlane(new Color(0, 0, 0, 0.2f));
-		Debug.LogWarning("But bla bla bla");
+//		CameraManager.instance.SetColorToFadePlane(new Color(0, 0, 0, 0.2f));
+//		Debug.LogWarning("But bla bla bla");
 		yield return new WaitForSeconds(0.001f);
 	}
 

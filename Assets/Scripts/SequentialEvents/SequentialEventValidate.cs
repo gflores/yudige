@@ -7,6 +7,7 @@ public class SequentialEventValidate : SequentialAction {
 	public override void StartSequence()
 	{
 		is_active = true;
+		is_available = false;
 		WantDoNextAction();
 	}
 	public IEnumerator Coroutine_LaunchStartSequence()
@@ -36,13 +37,19 @@ public class SequentialEventValidate : SequentialAction {
 		StateManager.instance.current_states.Add(StateManager.State.SCRIPTED_EVENT);
 		StateManager.instance.UpdateFromStates();
 	}
+	public bool is_available = true;
 	protected void OnEndEvent()
 	{
 		if (auto_pause == true)
 			MakeUnpause();
 		is_active = false;
-		StateManager.instance.current_states.Remove(StateManager.State.SCRIPTED_EVENT);
+		if (StateManager.instance.current_states.Contains(StateManager.State.BATTLE_INTRO) == false)
+			StateManager.instance.current_states.Remove(StateManager.State.SCRIPTED_EVENT);
 		StateManager.instance.UpdateFromStates();
+		Invoke("SetIsAvailable", 0.1f);
+	}
+	void SetIsAvailable(){
+		is_available = true;
 	}
 	public void MakePause()
 	{

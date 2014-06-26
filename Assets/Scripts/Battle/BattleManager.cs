@@ -42,6 +42,8 @@ public class BattleManager : MonoBehaviour {
 	//BATTLE MANAGEMENT BEGIN
 	public void StartBattle(NpcMosterBattle n_enemy_moster)
 	{
+		if (IsBattleAlreadyLaunched() == true)
+			return ;
 		enemy_moster = n_enemy_moster;
 		LaunchStartBattle();
 	}
@@ -56,6 +58,8 @@ public class BattleManager : MonoBehaviour {
 			return ;
 		last_enemy_attacked_applied = null;
 		StateManager.instance.current_states.Add(StateManager.State.SCRIPTED_EVENT);
+		StateManager.instance.current_states.Add(StateManager.State.BATTLE_INTRO);
+
 		StateManager.instance.UpdateFromStates();
 		StartCoroutine(Coroutine_StartBattle());
 		CameraManager.instance.battle_plane_behind_player_animation.GetComponent<SpriteRenderer>().color = Color.clear;
@@ -96,6 +100,7 @@ public class BattleManager : MonoBehaviour {
 			StartCoroutine(Coroutine_EnemyLoop());
 		StateManager.instance.current_states.Remove(StateManager.State.EXPLORATION);
 		StateManager.instance.current_states.Remove(StateManager.State.SCRIPTED_EVENT);
+		StateManager.instance.current_states.Remove(StateManager.State.BATTLE_INTRO);
 		StateManager.instance.current_states.Add(StateManager.State.BATTLE);
 		StateManager.instance.UpdateFromStates();
 

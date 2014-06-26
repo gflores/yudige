@@ -11,6 +11,7 @@ public class StateManager : MonoBehaviour {
 		EXPLORATION_MENU,
 		USE_KARMA_MENU,
 		SELECT_TRANSFORM_MENU,
+		BATTLE_INTRO,
 		SCRIPTED_EVENT
 	};
 	public HashSet<State> current_states {get; set;}
