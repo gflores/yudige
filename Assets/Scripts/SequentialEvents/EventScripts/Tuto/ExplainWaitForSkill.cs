@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ExplainOnPlayerTakeDamage : SequentialEventValidate {
-
+public class ExplainWaitForSkill : SequentialEventValidate {
 	protected override IEnumerable ActionList()
 	{
 		OnStartEvent();
@@ -19,9 +18,9 @@ public class ExplainOnPlayerTakeDamage : SequentialEventValidate {
 		Debug.LogWarning("Finishing!");
 		yield return null;
 	}
-	
+
 	IEnumerator _0(){
-		Debug.LogWarning("IN block-ExplainOnPlayerTakeDamage");
+		Debug.LogWarning("IN block-ExplainWaitForSkill");
 		yield return null;
 	}
 }

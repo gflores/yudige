@@ -36,16 +36,6 @@ public class TestManager : MonoBehaviour {
 				Debug.LogWarning("TEST END battle");
 				BattleManager.instance.EndBattle();
 			}
-			if (Input.GetKeyDown(KeyCode.B))
-			{
-				Debug.LogWarning("TEST BURST");
-				PlayerBattle.instance.BurstAffinities();
-			}
-			if (Input.GetKeyDown(KeyCode.N))
-			{
-				Debug.LogWarning("TEST RESET");
-				PlayerBattle.instance.ResetAffinities();
-			}
 
 			if (Input.GetKeyDown(KeyCode.D))
 			{
@@ -78,6 +68,21 @@ public class TestManager : MonoBehaviour {
 				Debug.LogWarning("Gain Karma ");
 				Player.instance.current_karma += 1;
 			}
+		}
+		if (Input.GetKeyDown(KeyCode.B))
+		{
+			Debug.LogWarning("TEST BURST");
+			PlayerBattle.instance.BurstAffinities();
+		}
+		if (Input.GetKeyDown(KeyCode.N))
+		{
+			Debug.LogWarning("TEST RESET");
+			PlayerBattle.instance.ResetAffinities();
+		}
+		if (Input.GetKeyDown(KeyCode.Space))
+		{
+			Debug.LogWarning("TEST CANCEL COMBOS");
+			PlayerBattle.instance.CancelCombos();
 		}
 		if (Input.GetKey(KeyCode.RightShift))
 		{

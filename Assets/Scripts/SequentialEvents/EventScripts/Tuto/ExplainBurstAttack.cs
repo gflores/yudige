@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ExplainWeakAffinities : SequentialEventValidate {
+public class ExplainBurstAttack : SequentialEventValidate {
 	protected override IEnumerable ActionList()
 	{
 		OnStartEvent();
@@ -9,7 +9,7 @@ public class ExplainWeakAffinities : SequentialEventValidate {
 		
 		yield return StartCoroutine(_0());		
 		yield return StartCoroutine(_EndSequence());
-		
+
 		//End
 		OnEndEvent();
 	}
@@ -20,7 +20,7 @@ public class ExplainWeakAffinities : SequentialEventValidate {
 	}
 	
 	IEnumerator _0(){
-		Debug.LogWarning("IN block-ExplainWeakAffinities");
+		Debug.LogWarning("IN block-ExplainBurstAttack");
 		yield return null;
 	}
 }

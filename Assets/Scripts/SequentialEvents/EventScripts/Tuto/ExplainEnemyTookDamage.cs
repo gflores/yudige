@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ExplainNormalAffinities : SequentialEventValidate {
+public class ExplainEnemyTookDamage : SequentialEventValidate {
+
 	protected override IEnumerable ActionList()
 	{
 		OnStartEvent();
@@ -20,7 +21,7 @@ public class ExplainNormalAffinities : SequentialEventValidate {
 	}
 	
 	IEnumerator _0(){
-		Debug.LogWarning("IN block-ExplainNormalAffinities");
+		Debug.LogWarning("IN block-ExplainEnemyTookDamage");
 		yield return null;
 	}
 }

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ExplainTimelineEvent : SequentialEventValidate {
+public class ExplainShield : SequentialEventValidate {
 	protected override IEnumerable ActionList()
 	{
 		OnStartEvent();
@@ -18,9 +18,9 @@ public class ExplainTimelineEvent : SequentialEventValidate {
 		Debug.LogWarning("Finishing!");
 		yield return null;
 	}
-
+	
 	IEnumerator _0(){
-		Debug.LogWarning("IN block-ExplainTimelineEvent");
+		Debug.LogWarning("IN block-ExplainShield");
 		yield return null;
 	}
 }

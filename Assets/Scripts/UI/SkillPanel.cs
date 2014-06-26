@@ -20,7 +20,9 @@ public class SkillPanel : MonoBehaviour
 		slot1.sk = (skills.Count > 0) ? skills [0] : null;
 		slot2.sk = (skills.Count > 1) ? skills [1] : null;
 		slot3.sk = (skills.Count > 2) ? skills [2] : null;
-		affinity_label.text = Player.instance.base_element_affinities [(int)element].ToString();
+//		affinity_label.text = Player.instance.base_element_affinities [(int)element].ToString(); //SALE PD
+		affinity_label.text = PlayerBattle.instance.GetEffectiveBattleElementAffinity(element).ToString();
+
 	}
 
 	void AffinityChange()

@@ -11,6 +11,7 @@ public enum TimelineEventType {
 	ENEMY_BURST_ATTACK,
 	PLAYER_NORMAL_ATTACK,
 	PLAYER_BURST_ATTACK,
+	PLAYER_CANCEL_COMBOS,
 }
 
 [System.Serializable]

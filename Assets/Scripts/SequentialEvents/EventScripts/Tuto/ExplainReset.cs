@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ExplainEnemyChangedElement : SequentialEventValidate {
+public class ExplainReset : SequentialEventValidate {
 	protected override IEnumerable ActionList()
 	{
+
 		OnStartEvent();
 		//Start
 		
-		yield return StartCoroutine(_0());		
+		yield return StartCoroutine(_0());
 		yield return StartCoroutine(_EndSequence());
 
 		//End
@@ -20,7 +21,7 @@ public class ExplainEnemyChangedElement : SequentialEventValidate {
 	}
 	
 	IEnumerator _0(){
-		Debug.LogWarning("IN block-ExplainEnemyChangedElement");
+		Debug.LogWarning("IN block-ExplainReset");
 		yield return null;
 	}
 }

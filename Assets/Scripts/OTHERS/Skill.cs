@@ -17,16 +17,13 @@ public class Skill : MonoBehaviour {
 		SkillEffects effects = new SkillEffects();
 
 		effects.deals_damage = deals_damage;
-//		Player.instance
+		float tmp_damages = (float)PlayerBattle.instance.GetEffectiveBattleElementAffinity(element) * damage_ratio;
+		effects.damages = Mathf.CeilToInt(tmp_damages);
 		if (is_burst == true)
 		{
-			effects.damages = PlayerBattle.instance.bonus_affinity_to_be_added_next;
+			effects.damages *= 2;
 		}
-		else
-		{
-			float tmp_damages = (float)PlayerBattle.instance.GetEffectiveBattleElementAffinity(element) * damage_ratio;
-			effects.damages = Mathf.CeilToInt(tmp_damages);
-		}
+		Debug.LogWarning("name: " + skill_name + "damage_ratio: " + damage_ratio + ", tmp: "+tmp_damages + "total: "+effects.damages);//toto
 		effects.skill = this;
 		return effects;
 	}

@@ -1,14 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ExplainAtkDefDeadlock : SequentialEventValidate {
+public class ExplainCombosBonus : SequentialEventValidate {
 	protected override IEnumerable ActionList()
 	{
-
 		OnStartEvent();
 		//Start
 		
-		yield return StartCoroutine(_0());
+		yield return StartCoroutine(_0());		
 		yield return StartCoroutine(_EndSequence());
 
 		//End
@@ -21,7 +20,7 @@ public class ExplainAtkDefDeadlock : SequentialEventValidate {
 	}
 	
 	IEnumerator _0(){
-		Debug.LogWarning("IN block-ExplainAtkDefDeadlock");
+		Debug.LogWarning("IN block-ExplainCombosBonus");
 		yield return null;
 	}
 }

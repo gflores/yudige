@@ -17,6 +17,8 @@ public class BattleManager : MonoBehaviour {
 	public int enemy_current_life {get; set;}
 	public EnemyAttack scheduled_enemy_attack {get; set;}
 	public EnemyAttack last_enemy_attacked_applied {get; set;}
+	public int bonus_value_for_next {get; set;}
+
 	void Awake () {
 		instance = this;
 	}
@@ -43,7 +45,11 @@ public class BattleManager : MonoBehaviour {
 		enemy_moster = n_enemy_moster;
 		LaunchStartBattle();
 	}
-
+	public void EnemyTakeDamage(int damages)
+	{
+		enemy_current_life = Mathf.Max(0, enemy_current_life - damages);
+		BattleScreen.instance.DamageToBoss(damages);
+	}
 	public void LaunchStartBattle()
 	{
 		if (IsBattleAlreadyLaunched() == true)
@@ -115,11 +121,15 @@ public class BattleManager : MonoBehaviour {
 
 	//ENEMY ACTIONS BEGIN
 	public bool regular_enemy_routine = true;
+	public bool pause_before_new_phase = false;
 	IEnumerator Coroutine_EnemyLoop()
 	{
 		while (true)
 		{
+			bonus_value_for_next = 0;
 			enemy_moster.SetupForNewPhase();
+			while (pause_before_new_phase == true)
+				yield return null;
 			while (enemy_moster.HasUsedAllAttacks() == false)
 			{
 				float[] before_after_time_to_wait = enemy_moster.GetBeforeAfterAttackTime();
@@ -132,11 +142,14 @@ public class BattleManager : MonoBehaviour {
 			yield return new WaitForSeconds(enemy_moster.attack_min_gap_time / 2);
 			if (enemy_has_element == true)
 			{
-				scheduled_enemy_attack = enemy_moster.GetBurstAttack(enemy_current_element);
+				scheduled_enemy_attack = enemy_moster.GetBurstAttack(enemy_moster.GetNextElement());
 				ScheduleEnemyAttack(scheduled_enemy_attack);
-				yield return new WaitForSeconds(enemy_moster.before_change_element_time);
+				yield return new WaitForSeconds(enemy_moster.after_burst_attack_time);
+				bonus_value_for_next = 0;
+				enemy_moster.base_element_bonuses[(int)scheduled_enemy_attack.element] += 1;
+
 			}
-			ScheduleEnemyChangeElement(enemy_moster.GetNextElement());
+//			ScheduleEnemyChangeElement(enemy_moster.GetNextElement());
 		}
 	}
 	public void ScheduleEnemyChangeElement(Element element)
@@ -156,6 +169,9 @@ public class BattleManager : MonoBehaviour {
 	}
 	public void ScheduleEnemyAttack(EnemyAttack attack_to_schedule)
 	{
+		enemy_moster.phase_element_bonuses[(int)attack_to_schedule.element] += bonus_value_for_next;
+		bonus_value_for_next = Mathf.CeilToInt((float)enemy_moster.GetEffectiveAffinity(attack_to_schedule.element) * enemy_moster.phase_increment_bonus_ratio);
+		attack_to_schedule = enemy_moster.GetAttack(attack_to_schedule.element, attack_to_schedule.is_burst);
 		TimelineEvent timeline_event_to_schedule;
 		
 		timeline_event_to_schedule = new TimelineEvent();
@@ -205,18 +221,17 @@ public class BattleManager : MonoBehaviour {
 		StartCoroutine(Coroutine_AttackFX(attack_FX, enemy_attack.is_burst));
 		if (enemy_attack.is_burst == true)
 		{
-			Debug.LogWarning("Boss attack changed to NEUTRAL !");
-			enemy_has_element = false;
-			foreach(var defense_FX in defenses_FX)
-				defense_FX.Stop();
-			SoundManager.instance.PlayIndependant(SoundManager.instance.remove_element_sound);
+			StartCoroutine(Coroutine_EnemyChangeElement(enemy_attack.element));
 			yield return new WaitForSeconds(0.5f + extra_time_for_burst_attack);
 			attack_FX.startLifetime -= life_time_delta_for_burst_attack;
 			attack_FX.startSpeed -= speed_delta_for_burst_attack;
 			attack_FX.startSize -= extra_size_for_burst_attack;
 		}
 		else
+		{
 			yield return new WaitForSeconds(0.5f);
+
+		}
 
 		last_enemy_attacked_applied = enemy_attack;
 		if (PlayerBattle.instance.has_element == true)
@@ -230,7 +245,7 @@ public class BattleManager : MonoBehaviour {
 			case ElementRelation.NORMAL:
 				SoundManager.instance.PlayIndependant(SoundManager.instance.normal_damage_sound);
 				StartCoroutine(SpecialEffectsManager.instance.normal_damage_shake.LaunchShake(PlayerBattle.instance.visuals_transform));
-				PlayerBattle.instance.TakeDamage(enemy_attack.damage - current_affinity);
+				PlayerBattle.instance.TakeDamage(Mathf.Max(0, enemy_attack.damage - current_affinity));
 				break;
 			case ElementRelation.STRONG:
 				SoundManager.instance.PlayIndependant(SoundManager.instance.strong_damage_sound);
@@ -240,7 +255,7 @@ public class BattleManager : MonoBehaviour {
 			case ElementRelation.WEAK:
 				SoundManager.instance.PlayIndependant(SoundManager.instance.weak_damage_sound);
 				PlayerBattle.instance.generic_animator.SetTrigger("StayStill");
-				PlayerBattle.instance.TakeDamage((enemy_attack.damage / 2) - current_affinity);
+				PlayerBattle.instance.TakeDamage(Mathf.Max(0, (enemy_attack.damage / 2) - current_affinity));
 				break;
 			}
 			Debug.LogWarning("Player took damage, element_relation:" + element_relation);
