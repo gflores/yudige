@@ -33,7 +33,7 @@ public class SkillButton : MonoBehaviour
 
 	void OnClick()
 	{
-		if (sk != null)
+		if (sk != null && button.isEnabled)
 			PlayerBattle.instance.ClickOnSkill (sk);
 	}
 	
