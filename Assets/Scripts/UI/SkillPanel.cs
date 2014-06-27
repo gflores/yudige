@@ -31,6 +31,6 @@ public class SkillPanel : MonoBehaviour
 	{
 		PlayerBattle.instance.ClickOnElementDefense (element);
 		BattleScreen.instance.DamageToBoss ("ma tete");
-		PopupText.instance.Show (0,0, 200, 50);
+		HighlightManager.instance.HighlightObject( HighlightManager.instance.element1slot1);
 	}
 }

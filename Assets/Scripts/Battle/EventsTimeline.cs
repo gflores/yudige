@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 public enum TimelineSide {
-	PLAYER,
-	ENEMY
+	ENEMY,
+	PLAYER
+
 }
 public enum TimelineEventType {
 	ENEMY_SIMPLE_ATTACK,
