@@ -33,6 +33,7 @@ public class HighlightManager : MonoBehaviour
 
 		tp = TweenPosition.Begin(obj, 0.25f, obj.transform.localPosition + new Vector3(0, 10, 0));
 		tp.style = UITweener.Style.PingPong;
+
 	}
 	public void Stop()
 	{

@@ -13,6 +13,16 @@ public class SkillPanel : MonoBehaviour
 	public SkillButton slot3;
 	public UIButton affinity;
 	public UILabel affinity_label;
+	public GameObject preview;
+	public UILabel preview_label;
+
+
+	void Awake()
+	{
+		slot1.parent = this;
+		slot2.parent = this;
+		slot3.parent = this;
+	}
 
 	void Update()
 	{
@@ -24,6 +34,7 @@ public class SkillPanel : MonoBehaviour
 		slot2.gameObject.SetActive (slot2.sk != null);
 		slot3.gameObject.SetActive (slot3.sk != null);
 		affinity_label.text = PlayerBattle.instance.GetEffectiveBattleElementAffinity(element).ToString();
+		preview_label.text = (PlayerBattle.instance.GetEffectiveBattleElementAffinity(element) + PlayerBattle.instance.bonus_affinity_to_be_added_next).ToString() ;
 
 	}
 
@@ -32,5 +43,11 @@ public class SkillPanel : MonoBehaviour
 		PlayerBattle.instance.ClickOnElementDefense (element);
 		BattleScreen.instance.DamageToBoss ("ma tete");
 		HighlightManager.instance.HighlightObject( HighlightManager.instance.element1slot1);
+	}
+
+	public void DisplayPreview(bool b)
+	{
+		preview.SetActive(b);
+
 	}
 }

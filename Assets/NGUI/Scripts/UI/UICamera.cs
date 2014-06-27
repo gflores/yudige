@@ -1045,8 +1045,8 @@ public class UICamera : MonoBehaviour
 			}
 			else
 			{
-				vertical += GetDirection(KeyCode.W, KeyCode.UpArrow, KeyCode.S, KeyCode.DownArrow);
-				horizontal += GetDirection(KeyCode.D, KeyCode.RightArrow, KeyCode.A, KeyCode.LeftArrow);
+				vertical += GetDirection(KeyCode.I, KeyCode.UpArrow, KeyCode.J, KeyCode.DownArrow);
+				horizontal += GetDirection(KeyCode.K, KeyCode.RightArrow, KeyCode.L, KeyCode.LeftArrow);
 			}
 		}
 

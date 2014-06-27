@@ -14,6 +14,8 @@ public class BattleScreen : MonoBehaviour
 	public UILabel event_template;
 	public UILabel player_damage;
 	public UILabel boss_damage;
+	public UIButton cancel_button;
+	public UISprite timeline_preview;
 
 	void Awake()
 	{
@@ -32,6 +34,8 @@ public class BattleScreen : MonoBehaviour
 			UpdateLife ();
 			UpdateBossLife ();
 			UpdateTimeline ();
+
+			cancel_button.isEnabled = PlayerBattle.instance.is_casting_skill != true && PlayerBattle.instance.bonus_affinity_to_be_added_next != 0;
 
 		}
 	}
@@ -66,7 +70,18 @@ public class BattleScreen : MonoBehaviour
 			label.text = e.name;
 			n.transform.SetParent(events_container);
 			n.transform.localPosition = new Vector3(e.side == TimelineSide.PLAYER ? -75 : 75, -275 + (e.time_remaining / EventsTimeline.instance.total_time) * 550);
-			n.transform.localScale = new Vector3(20, 20, 1);
+			if (e.event_type == TimelineEventType.ENEMY_SIMPLE_ATTACK || e.event_type == TimelineEventType.PLAYER_NORMAL_ATTACK)
+			{
+				n.transform.localScale = new Vector3(20, 20, 1);
+			}
+			else if (e.event_type == TimelineEventType.ENEMY_BURST_ATTACK || e.event_type == TimelineEventType.PLAYER_BURST_ATTACK)
+			{
+				n.transform.localScale = new Vector3(30, 30, 1);
+			}
+			else if (e.event_type == TimelineEventType.PLAYER_CANCEL_COMBOS)
+			{
+				n.transform.localScale = new Vector3(10, 10, 1);
+			}
 		}
 	}
 
@@ -103,7 +118,21 @@ public class BattleScreen : MonoBehaviour
 
 	void ResetAffinities()
 	{
-		PlayerBattle.instance.ResetAffinities();
+		PlayerBattle.instance.CancelCombos();
+	}
+
+	public void SkillTimelinePreview(Skill sk)
+	{
+		if (sk != null)
+		{
+			timeline_preview.gameObject.SetActive(true);
+			timeline_preview.transform.localPosition = new Vector3(-75, -275 + (sk.cast_time / EventsTimeline.instance.total_time) * 550);
+			timeline_preview.alpha = 0.5f;
+		}
+		else
+		{
+			timeline_preview.gameObject.SetActive(false);
+		}
 	}
 
 
