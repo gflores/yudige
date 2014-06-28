@@ -17,6 +17,11 @@ public class BattleScreen : MonoBehaviour
 	public UIButton cancel_button;
 	public UISprite timeline_preview;
 
+	public UILabel boss_dark_label;
+	public UILabel boss_light_label;
+	public UILabel boss_rock_label;
+	public UILabel boss_fire_label;
+
 	void Awake()
 	{
 		instance = this;
@@ -24,7 +29,7 @@ public class BattleScreen : MonoBehaviour
 
 	public void SetupForBattle()
 	{
-
+		UICamera.selectedObject = cancel_button.gameObject;
 	}
 
 	void Update()
@@ -47,6 +52,7 @@ public class BattleScreen : MonoBehaviour
 		shield_slider.sliderValue = current_shield / max_shield;
 		shield_label.text = current_shield.ToString () + " / " + max_shield;
 		health_label.text = Player.instance.current_life.ToString();
+
 	}
 
 	private void UpdateBossLife()
@@ -54,6 +60,11 @@ public class BattleScreen : MonoBehaviour
 		float max_health = BattleManager.instance.GetEnemyMaxLife();
 		float current_health = BattleManager.instance.enemy_current_life;
 		boss_life_slider.sliderValue = current_health / max_health;
+		boss_dark_label.text = BattleManager.instance.enemy_moster.GetEffectiveAffinity(Element.DARK).ToString();
+		boss_light_label.text = BattleManager.instance.enemy_moster.GetEffectiveAffinity(Element.LIGHT).ToString();
+		boss_rock_label.text = BattleManager.instance.enemy_moster.GetEffectiveAffinity(Element.ROCK).ToString();
+		boss_fire_label.text = BattleManager.instance.enemy_moster.GetEffectiveAffinity(Element.FIRE).ToString();
+
 	}
 
 	private void UpdateTimeline()
