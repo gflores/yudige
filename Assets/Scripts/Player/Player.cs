@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Player : MonoBehaviour {
 	public static Player instance;
-	public SequentialEventValidate death_scene_action_sequence;
+	public DeathSceneScript death_scene_action_sequence;
 	public MosterData current_moster {get; set;}
 
 	public int life_bonus_per_karma;
@@ -21,12 +21,19 @@ public class Player : MonoBehaviour {
 
 //	public bool can_evolve {get; set;}
 	float _time_passed_before_decrease_life = 0f;
-
+	public float base_time_before_natural_death = 5f;
+	public float effective_time_before_natural_death;
+	float _current_natural_death_time = 0f;
+	public float seconds_per_cycles = 80f;
 	void Awake () {
 		instance = this;
 		base_element_affinities = new int[(int)Element.Count];
 	}
 
+	public int GetLivedCyclesNumber()
+	{
+		return Mathf.FloorToInt(_current_natural_death_time / seconds_per_cycles);
+	}
 	void Update()
 	{
 		if (is_living_time_passing == true)
@@ -39,6 +46,10 @@ public class Player : MonoBehaviour {
 				current_life -= 1;
 				CheckDeath();
 			}
+			_current_natural_death_time += Time.deltaTime;
+//			if (_current_natural_death_time >= effective_time_before_natural_death && StateManager.instance.current_states.Contains(StateManager.State.EXPLORATION) && StateManager.instance.current_states.Contains(StateManager.State.BATTLE) == false)
+//				LaunchDeath(DeathType.NATURAL);
+
 		}
 	}
 
@@ -112,9 +123,69 @@ public class Player : MonoBehaviour {
 		current_moster = new_moster;
 		RefreshMoster();
 	}
+	public void LaunchBackToBase()
+	{
+		StartCoroutine(DisparitionScene());
+	}
+	IEnumerator DisparitionScene()
+	{
+		float behind_plane_alpha_value = 0.85f;
+		StateManager.instance.current_states.Add(StateManager.State.SCRIPTED_EVENT);
+		StateManager.instance.UpdateFromStates();
+		yield return new WaitForSeconds(1f);
+		SoundManager.instance.PlayIndependant(SoundManager.instance.death_sfx);
+		SpecialEffectsManager.instance.moster_transformation_shake.time_ratio = 1 / 4f;
+		Transform visuals_transform;
+		SpriteRenderer player_main_renderer;
+		if (StateManager.instance.current_states.Contains(StateManager.State.BATTLE))
+		{
+			visuals_transform = PlayerBattle.instance.visuals_transform;
+			player_main_renderer = PlayerBattle.instance.main_renderer;
+		}
+		else
+		{
+			visuals_transform = PlayerExploration.instance.visuals_transform;
+			player_main_renderer = PlayerExploration.instance.main_renderer;
+		}
+		StartCoroutine(SpecialEffectsManager.instance.moster_transformation_shake.LaunchShake(visuals_transform));
+		yield return StartCoroutine(SpecialEffectsManager.instance.Coroutine_StartTweenAlpha(
+			player_main_renderer,
+			1f, 0f, 2f));
+		
+		yield return new WaitForSeconds(2f);
+		
+		CameraManager.instance.SetColorToFadePlane(new Color(0, 0, 0, 0));
+		yield return StartCoroutine(CameraManager.instance.COROUTINE_MainCameraFadeToOpaque(2f));
 
+		if (StateManager.instance.current_states.Contains(StateManager.State.BATTLE))
+		{
+			BattleManager.instance.EndBattle();
+		}
+		//apply change
+		
+		GameManager.instance.GetSpawnScreen().MakeGoTo();
+		PlayerExploration.instance.transform.position = GameManager.instance.GetSpawnPoint().transform.position;
+		PlayerExploration.instance.RotatePlayer(Vector2.up);
+
+		CameraManager.instance.SetColorToBehindPlane(new Color(0, 0, 0, behind_plane_alpha_value));
+		//return to exploration normal state
+		//		yield return new WaitForSeconds(0.5f);
+		PlayerExploration.instance.main_renderer.color = Color.white;
+		yield return StartCoroutine(CameraManager.instance.COROUTINE_MainCameraFadeToTransparent(3f));
+		yield return StartCoroutine(CameraManager.instance.Coroutine_LaunchAnimation(
+			CameraManager.instance.exploration_plane_behind_player_animation,
+			"ToTransparent", 1f
+			));
+
+
+		StateManager.instance.current_states.Remove(StateManager.State.SCRIPTED_EVENT);
+		StateManager.instance.UpdateFromStates();
+
+	}
 	public bool CheckDeath()
 	{
+		if (GameManager.instance.IsInTutorial())
+			return false;
 		if (current_life <= 0)
 		{
 			current_life = 0;
@@ -124,13 +195,13 @@ public class Player : MonoBehaviour {
 		return false;
 	}
 
-	public void LaunchDeath()
+	public void LaunchDeath(DeathType death_type = DeathType.NO_HEALTH)
 	{
 		Debug.LogWarning("DEAD");
 		SoundManager.instance.PlayIfDifferent(SoundManager.instance.death_music);
-		StartCoroutine(Coroutine_LaunchDeathRoutine());
+		StartCoroutine(Coroutine_LaunchDeathRoutine(death_type));
 	}
-	IEnumerator Coroutine_LaunchDeathRoutine()
+	IEnumerator Coroutine_LaunchDeathRoutine(DeathType death_type = DeathType.NO_HEALTH)
 	{
 		StateManager.instance.current_states.Add(StateManager.State.SCRIPTED_EVENT);
 		StateManager.instance.UpdateFromStates();
@@ -143,7 +214,8 @@ public class Player : MonoBehaviour {
 			yield return StartCoroutine(Coroutine_DeathFadeScene(
 				CameraManager.instance.battle_plane_behind_player_animation,
 				PlayerBattle.instance.main_renderer,
-				PlayerBattle.instance.visuals_transform
+				PlayerBattle.instance.visuals_transform,
+				death_type
 				));
 		}
 		else if (StateManager.instance.current_states.Contains(StateManager.State.EXPLORATION))
@@ -151,13 +223,14 @@ public class Player : MonoBehaviour {
 			yield return StartCoroutine(Coroutine_DeathFadeScene(
 				CameraManager.instance.exploration_plane_behind_player_animation,
 				PlayerExploration.instance.main_renderer,
-				PlayerExploration.instance.visuals_transform
+				PlayerExploration.instance.visuals_transform,
+				death_type
 			));
 		}
 		StateManager.instance.current_states.Remove(StateManager.State.SCRIPTED_EVENT);
 		StateManager.instance.UpdateFromStates();
 	}
-	IEnumerator Coroutine_DeathFadeScene(Animation behind_plane_animation, SpriteRenderer player_main_renderer, Transform visuals_transform)
+	IEnumerator Coroutine_DeathFadeScene(Animation behind_plane_animation, SpriteRenderer player_main_renderer, Transform visuals_transform, DeathType death_type = DeathType.NO_HEALTH)
 	{
 		float behind_plane_alpha_value = 0.85f;
 
@@ -189,8 +262,10 @@ public class Player : MonoBehaviour {
 //			"ToOpaque", 2f
 //		));
 
-		yield return new WaitForSeconds(2f);
-		//		yield return StartCoroutine(death_scene_action_sequence.Coroutine_LaunchStartSequence());
+		if (death_type == DeathType.NATURAL)
+			yield return StartCoroutine(death_scene_action_sequence.Coroutine_NaturalDeath());
+		else
+			yield return StartCoroutine(death_scene_action_sequence.Coroutine_NoHealthDeath());
 
 		PlayerExploration.instance.generic_animator.SetBool("IsSick", false);
 		//apply change
@@ -215,6 +290,8 @@ public class Player : MonoBehaviour {
 		StateManager.instance.UpdateFromStates();
 		base_shield = 0;
 		current_life = 0;
+		_current_natural_death_time = 0;
+		effective_time_before_natural_death = base_time_before_natural_death;
 		for (int i = 0; i != base_element_affinities.Length; ++i)
 			base_element_affinities[i] = 0;
 		MostersManager.instance.AddToEvolved(current_moster);

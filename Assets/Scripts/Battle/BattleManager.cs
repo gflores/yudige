@@ -56,6 +56,7 @@ public class BattleManager : MonoBehaviour {
 	{
 		if (IsBattleAlreadyLaunched() == true)
 			return ;
+		SaveManager.current_saved_game.is_in_battle = true;
 		last_enemy_attacked_applied = null;
 		StateManager.instance.current_states.Add(StateManager.State.SCRIPTED_EVENT);
 		StateManager.instance.current_states.Add(StateManager.State.BATTLE_INTRO);
@@ -385,6 +386,7 @@ public class BattleManager : MonoBehaviour {
 	}
 	public void EndBattle()
 	{
+		SaveManager.current_saved_game.is_in_battle = false;
 		enemy_moster.visuals_transform.position = new Vector2(-99999, 999999);
 		PlayerBattle.instance.is_shield_live = false;
 		InteruptBattleCoroutines();

@@ -26,7 +26,7 @@ public class PlayerBattle : MonoBehaviour {
 	public SkillEffects last_skill_effect_applied {get; set;}
 	public int bonus_affinity_to_be_added_next {get; set;}
 	public List<int> current_affinity_combos_bonus {get; set;}
-	
+	public bool using_reset {get; set;}
 	void Awake()
 	{
 		instance = this;
@@ -86,7 +86,7 @@ public class PlayerBattle : MonoBehaviour {
 	public void ScheduleCancelCombos()
 	{
 		TimelineEvent timeline_event_to_schedule;
-		
+		using_reset = true;
 		timeline_event_to_schedule = new TimelineEvent();
 		timeline_event_to_schedule.name = "CANCEL COMBOS";
 		timeline_event_to_schedule.side = TimelineSide.PLAYER;
@@ -99,6 +99,7 @@ public class PlayerBattle : MonoBehaviour {
 	}
 	IEnumerator Coroutine_CancelCombos()
 	{
+		using_reset = false;
 		is_casting_skill = false;
 		ResetAffinities();
 		StartCoroutine(Coroutine_RemoveElement());
@@ -132,6 +133,7 @@ public class PlayerBattle : MonoBehaviour {
 	}
 	public void SetupForBattle()
 	{
+		using_reset = false;
 		generic_animator.SetBool("InBattle", true);
 		ResetAffinities();
 		StartCoroutine(Coroutine_RemoveElement());
@@ -157,7 +159,7 @@ public class PlayerBattle : MonoBehaviour {
 		if (IsSkillAvailable(skill_clicked) == false)
 			return ;
 
-		if (GenerateSkillsAvailable().Count == 1)
+		if (IsLastSkillUsable())
 		{
 			Debug.LogWarning("last skill, BURST !");
 			ScheduleBurstAttack(skill_clicked);
@@ -394,13 +396,23 @@ public class PlayerBattle : MonoBehaviour {
 //		main_renderer.color = Color.green;
 		visuals_transform.localScale = Player.instance.current_moster.visuals_transform.localScale;
 	}
+	bool IsLastSkillUsable()
+	{
+		int count = 0;
+		foreach (var skill in Player.instance.current_moster.skills)
+		{
+			if (skill.available == true && skill.is_consumed == false)
+				count += 1;
+		}
+		return count == 1;
+	}
 	public List<Skill> GenerateSkillsAvailable()
 	{
 		List<Skill> skills_available = new List<Skill>();
 
 		foreach (var skill in Player.instance.current_moster.skills)
 		{
-			if (skill.available == true && skill.is_consumed == false)
+			if (skill.available == true)
 				skills_available.Add(skill);
 		}
 		return skills_available;
@@ -411,7 +423,7 @@ public class PlayerBattle : MonoBehaviour {
 		
 		foreach (var skill in Player.instance.current_moster.skills)
 		{
-			if (skill.available == true && skill.element == e && skill.is_consumed == false)
+			if (skill.available == true && skill.element == e)
 				skills_available.Add(skill);
 		}
 		return skills_available;

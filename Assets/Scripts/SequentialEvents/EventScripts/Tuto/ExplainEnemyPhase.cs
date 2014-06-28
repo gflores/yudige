@@ -9,19 +9,17 @@ public class ExplainEnemyPhase : SequentialEventValidate {
 		//Start
 		
 		yield return StartCoroutine(_0());
-		yield return StartCoroutine(_EndSequence());
 		
 		//End
 		OnEndEvent();
+		CameraManager.instance.SetColorToFadePlane(new Color(0, 0, 0, 0f));
+		PopupSmall.instance.Hide();
 	}
-	IEnumerator _EndSequence(){
-		CameraManager.instance.SetColorToFadePlane(new Color(0, 0, 0, 0));
-		Debug.LogWarning("Finishing!");
-		yield return null;
-	}
-	
 	IEnumerator _0(){
-		Debug.LogWarning("IN block-ExplainEnemyPhase");
+		CameraManager.instance.SetColorToFadePlane(new Color(0, 0, 0, 0.3f));
+		PopupSmall.instance.text_label.text = "Like for you, the affinities of your enemy goes up for each of its attacks, and get reset after a final burst attack which deals more damage.\n" +
+			"This final burst attack will also change the defensive type of the enemy.\n";
+		PopupSmall.instance.Show(110,-41, 527, 300);
 		yield return null;
 	}
 }

@@ -9,19 +9,16 @@ public class ExplainReset : SequentialEventValidate {
 		//Start
 		
 		yield return StartCoroutine(_0());
-		yield return StartCoroutine(_EndSequence());
 
 		//End
 		OnEndEvent();
+		CameraManager.instance.SetColorToFadePlane(new Color(0, 0, 0, 0f));
+		PopupSmall.instance.Hide();
 	}
-	IEnumerator _EndSequence(){
-		CameraManager.instance.SetColorToFadePlane(new Color(0, 0, 0, 0));
-		Debug.LogWarning("Finishing!");
-		yield return null;
-	}
-	
 	IEnumerator _0(){
-		Debug.LogWarning("IN block-ExplainReset");
+		CameraManager.instance.SetColorToFadePlane(new Color(0, 0, 0, 0.3f));
+		PopupSmall.instance.text_label.text = "When you manually reset, your type instantly go to being neutral, meaning you will take damages regardless of your affinities, or the attack type\n";
+		PopupSmall.instance.Show(110,-41, 527, 300);
 		yield return null;
 	}
 }

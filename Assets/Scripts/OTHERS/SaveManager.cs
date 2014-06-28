@@ -70,7 +70,7 @@ public class SavedGameData
 	public List<int> evolved_mosters_list;
 	public float time_lived;
 	public List<bool> pickup_karmic_point_state_list;
-
+	public bool is_in_battle;
 	static public SavedGameData GetNew()
 	{
 		SavedGameData save_game_data;
@@ -80,7 +80,7 @@ public class SavedGameData
 		save_game_data.is_in_tutorial = false;
 		save_game_data.eliminated_mosters_list = new List<int>();
 		save_game_data.evolved_mosters_list = new List<int>();
-
+		save_game_data.is_in_battle = false;
 		save_game_data.pickup_karmic_point_state_list = new List<bool>();
 		for (int i = 0; i != PickupKarmicPointManager.instance.pickup_karma_list.Length; ++i)
 			save_game_data.pickup_karmic_point_state_list.Add(true);

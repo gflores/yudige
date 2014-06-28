@@ -23,7 +23,11 @@ public class SkillButton : MonoBehaviour
 		if (sk != null)
 		{
 			label.text = sk.skill_name;
-			button.isEnabled = PlayerBattle.instance.IsSkillAvailable(sk);
+			button.disabledColor = sk.is_consumed ? Color.red : Color.gray ;
+			button.isEnabled = PlayerBattle.instance.IsSkillAvailable(sk) && sk.is_consumed == false;
+
+
+			
 		}
 	}
 

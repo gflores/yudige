@@ -9,6 +9,10 @@ public class TestManager : MonoBehaviour {
 	public Element battle_selected_element_for_defense;
 	public Element karma_boost_element_selected;
 	void Update () {
+		if (Input.GetKeyDown(KeyCode.KeypadPlus))
+			Time.timeScale *= 2;
+		if (Input.GetKeyDown(KeyCode.KeypadMinus))
+			Time.timeScale /= 2;
 		if (Input.GetKeyDown(KeyCode.End))
 		{
 			Application.LoadLevel(Application.loadedLevel);
@@ -41,6 +45,11 @@ public class TestManager : MonoBehaviour {
 			{
 				Debug.LogWarning("TEST player evolving to: " + player_moster_to_evolve_test.moster_name);
 				Player.instance.EvolveTo(player_moster_to_evolve_test);
+			}
+			if (Input.GetKeyDown(KeyCode.F))
+			{
+				Debug.LogWarning("TEST player speed up: " + player_moster_to_evolve_test.moster_name);
+				PlayerExploration.instance.move_speed *= 1.5f;
 			}
 			if (Input.GetKeyDown(KeyCode.Q))
 			{
@@ -100,6 +109,11 @@ public class TestManager : MonoBehaviour {
 			{
 				Debug.LogWarning("TEST: player death");
 				Player.instance.LaunchDeath();
+			}
+			if (Input.GetKeyDown(KeyCode.S))
+			{
+				Debug.LogWarning("TEST: player teleport");
+				Player.instance.LaunchBackToBase();
 			}
 		}
 

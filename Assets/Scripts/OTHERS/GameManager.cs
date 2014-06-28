@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
+	public IntroScript intro_sequence;
 	public bool standalone_scene_mode = true;
 	public static GameManager instance;
 	public float auto_save_frequency_time = 2f;
@@ -55,17 +56,25 @@ public class GameManager : MonoBehaviour {
 		StateManager.instance.UpdateFromStates();
 		Player.instance.RefreshMoster();
 		PlayerExploration.instance.UpdateMosterExploration();
+		PilliersManager.instance.RefreshPilliers();
+
 		StartCoroutine(AutoSaveContinuously());
+		if (IsInTutorial())
+		{
+			intro_sequence.StartSequence();
+			intro_sequence.WantDoNextAction();
+		}
 	}
 	IEnumerator AutoSaveContinuously()
 	{
 		while (true)
 		{
 			yield return new WaitForSeconds(auto_save_frequency_time);
-			SaveGame();
+			if (IsInTutorial() == false)
+				SaveGame();
 		}
 	}
-	bool IsInTutorial(){
+	public bool IsInTutorial(){
 		if (standalone_scene_mode)
 			return SaveManager.current_saved_game.is_in_tutorial == true;
 		else
@@ -97,7 +106,7 @@ public class GameManager : MonoBehaviour {
 		MostersManager.instance.eliminated_mosters_list = new List<MosterData>();
 		MostersManager.instance.evolved_mosters_list = new List<MosterData>();
 		PlayerExploration.instance.transform.position = GetSpawnPoint().position;
-		GetSpawnScreen().MakeGoTo();
+		GetSpawnScreen().MakeGoTo(!IsInTutorial());
 
 	}
 	public void SaveGame()
@@ -112,8 +121,17 @@ public class GameManager : MonoBehaviour {
 	}
 	public void SetGameFromSaveData()
 	{
-		PlayerExploration.instance.transform.position = SaveManager.current_saved_game.player_position;
-		ExplorationScreenManager.instance.IndexToExplorationScreen(SaveManager.current_saved_game.current_exploration_screen_index).MakeGoTo();
+		if (SaveManager.current_saved_game.is_in_battle == true)
+		{
+			GetSpawnScreen().MakeGoTo();
+			SaveManager.current_saved_game.is_in_battle = false;
+			PlayerExploration.instance.transform.position = GetSpawnPoint().position;
+		}
+		else
+		{
+			PlayerExploration.instance.transform.position = SaveManager.current_saved_game.player_position;
+			ExplorationScreenManager.instance.IndexToExplorationScreen(SaveManager.current_saved_game.current_exploration_screen_index).MakeGoTo();
+		}
 		Player.instance.current_life = SaveManager.current_saved_game.current_life;
 		Player.instance.base_shield = SaveManager.current_saved_game.base_shield;
 		Player.instance.base_element_affinities = SaveManager.current_saved_game.base_element_affinities;

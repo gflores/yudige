@@ -7,20 +7,18 @@ public class ExplainBurstAttack : SequentialEventValidate {
 		OnStartEvent();
 		//Start
 		
-		yield return StartCoroutine(_0());		
-		yield return StartCoroutine(_EndSequence());
+		yield return StartCoroutine(_0());
 
 		//End
 		OnEndEvent();
+		CameraManager.instance.SetColorToFadePlane(new Color(0, 0, 0, 0f));
+		PopupSmall.instance.Hide();
 	}
-	IEnumerator _EndSequence(){
-		CameraManager.instance.SetColorToFadePlane(new Color(0, 0, 0, 0));
-		Debug.LogWarning("Finishing!");
-		yield return null;
-	}
-	
 	IEnumerator _0(){
-		Debug.LogWarning("IN block-ExplainBurstAttack");
+		CameraManager.instance.SetColorToFadePlane(new Color(0, 0, 0, 0.3f));
+		PopupSmall.instance.text_label.text = "Your last skill to be used will be twice as powerful.\n" +
+			"Using your last skill will also make you recover all of your consumed skills";
+		PopupSmall.instance.Show(110,-41, 527, 300);
 		yield return null;
 	}
 }

@@ -28,7 +28,16 @@ public class ElementManager : MonoBehaviour {
 	void Start () {
 		element_infos_list = GetComponentsInChildren<ElementInfo>();
 	}
-
+	public string ElementToString(Element element)
+	{
+		if (element == Element.DARK)
+			return "Void";
+		if (element == Element.LIGHT)
+			return "Absolute";
+		if (element == Element.ROCK)
+			return "Rock";
+		return "Fire";
+	}
 	public ElementInfo GetElementInfo(Element element)
 	{
 		return System.Array.Find(element_infos_list, (e_info) => e_info.element == element);

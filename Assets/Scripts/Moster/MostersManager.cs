@@ -77,6 +77,7 @@ public class MostersManager : MonoBehaviour {
 	{
 		if (eliminated_mosters_list.Contains(moster) == false)
 			eliminated_mosters_list.Add(moster);
+		PilliersManager.instance.RefreshPilliers();
 	}
 	public void AddToEvolved(MosterData moster)
 	{

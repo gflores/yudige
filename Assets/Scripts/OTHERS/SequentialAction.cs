@@ -15,7 +15,7 @@ public class SequentialAction : MonoBehaviour
 	{
 		WantDoNextAction();
 	}
-	void Start()
+	void Awake()
 	{
 		Reinit();
 		_can_do_next_action = true;

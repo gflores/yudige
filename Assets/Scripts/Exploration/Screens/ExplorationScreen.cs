@@ -12,11 +12,12 @@ public class ExplorationScreen : MonoBehaviour {
 			point.exploration_screen = this;
 		}
 	}
-	public void MakeGoTo()
+	public void MakeGoTo(bool set_music = true)
 	{
 		GameManager.instance.current_screen = this;
 		SetCameraToThis();
-		ApplyBackgroundMusic();
+		if (set_music)
+			ApplyBackgroundMusic();
 	}
 	public void SetCameraToThis()
 	{
