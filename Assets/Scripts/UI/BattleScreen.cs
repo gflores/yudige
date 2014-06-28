@@ -14,6 +14,13 @@ public class BattleScreen : MonoBehaviour
 	public UILabel event_template;
 	public UILabel player_damage;
 	public UILabel boss_damage;
+	public UIButton cancel_button;
+	public UISprite timeline_preview;
+
+	public UILabel boss_dark_label;
+	public UILabel boss_light_label;
+	public UILabel boss_rock_label;
+	public UILabel boss_fire_label;
 
 	void Awake()
 	{
@@ -22,7 +29,7 @@ public class BattleScreen : MonoBehaviour
 
 	public void SetupForBattle()
 	{
-
+		UICamera.selectedObject = cancel_button.gameObject;
 	}
 
 	void Update()
@@ -32,6 +39,8 @@ public class BattleScreen : MonoBehaviour
 			UpdateLife ();
 			UpdateBossLife ();
 			UpdateTimeline ();
+
+			cancel_button.isEnabled = PlayerBattle.instance.is_casting_skill != true && PlayerBattle.instance.bonus_affinity_to_be_added_next != 0;
 
 		}
 	}
@@ -43,6 +52,7 @@ public class BattleScreen : MonoBehaviour
 		shield_slider.sliderValue = current_shield / max_shield;
 		shield_label.text = current_shield.ToString () + " / " + max_shield;
 		health_label.text = Player.instance.current_life.ToString();
+
 	}
 
 	private void UpdateBossLife()
@@ -50,6 +60,11 @@ public class BattleScreen : MonoBehaviour
 		float max_health = BattleManager.instance.GetEnemyMaxLife();
 		float current_health = BattleManager.instance.enemy_current_life;
 		boss_life_slider.sliderValue = current_health / max_health;
+		boss_dark_label.text = BattleManager.instance.enemy_moster.GetEffectiveAffinity(Element.DARK).ToString();
+		boss_light_label.text = BattleManager.instance.enemy_moster.GetEffectiveAffinity(Element.LIGHT).ToString();
+		boss_rock_label.text = BattleManager.instance.enemy_moster.GetEffectiveAffinity(Element.ROCK).ToString();
+		boss_fire_label.text = BattleManager.instance.enemy_moster.GetEffectiveAffinity(Element.FIRE).ToString();
+
 	}
 
 	private void UpdateTimeline()
@@ -65,8 +80,19 @@ public class BattleScreen : MonoBehaviour
 			UILabel label = n.GetComponent<UILabel>();
 			label.text = e.name;
 			n.transform.SetParent(events_container);
-			n.transform.localPosition = new Vector3(70, -275 + (e.time_remaining / EventsTimeline.instance.total_time) * 550);
-			n.transform.localScale = new Vector3(20, 20, 1);
+			n.transform.localPosition = new Vector3(e.side == TimelineSide.PLAYER ? -75 : 75, -275 + (e.time_remaining / EventsTimeline.instance.total_time) * 550);
+			if (e.event_type == TimelineEventType.ENEMY_SIMPLE_ATTACK || e.event_type == TimelineEventType.PLAYER_NORMAL_ATTACK)
+			{
+				n.transform.localScale = new Vector3(20, 20, 1);
+			}
+			else if (e.event_type == TimelineEventType.ENEMY_BURST_ATTACK || e.event_type == TimelineEventType.PLAYER_BURST_ATTACK)
+			{
+				n.transform.localScale = new Vector3(30, 30, 1);
+			}
+			else if (e.event_type == TimelineEventType.PLAYER_CANCEL_COMBOS)
+			{
+				n.transform.localScale = new Vector3(10, 10, 1);
+			}
 		}
 	}
 
@@ -103,7 +129,21 @@ public class BattleScreen : MonoBehaviour
 
 	void ResetAffinities()
 	{
-		PlayerBattle.instance.ResetAffinities();
+		PlayerBattle.instance.CancelCombos();
+	}
+
+	public void SkillTimelinePreview(Skill sk)
+	{
+		if (sk != null)
+		{
+			timeline_preview.gameObject.SetActive(true);
+			timeline_preview.transform.localPosition = new Vector3(-75, -275 + (sk.cast_time / EventsTimeline.instance.total_time) * 550);
+			timeline_preview.alpha = 0.5f;
+		}
+		else
+		{
+			timeline_preview.gameObject.SetActive(false);
+		}
 	}
 
 

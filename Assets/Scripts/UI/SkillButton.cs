@@ -9,6 +9,8 @@ public class SkillButton : MonoBehaviour
 	public UILabel label;
 
 	public UIButton button;
+
+	public SkillPanel parent;
 	
 	public Skill sk;
 
@@ -33,8 +35,14 @@ public class SkillButton : MonoBehaviour
 
 	void OnClick()
 	{
-		if (sk != null)
+		if (sk != null && button.isEnabled)
 			PlayerBattle.instance.ClickOnSkill (sk);
+	}
+
+	void OnHover(bool isOver)
+	{
+		parent.DisplayPreview(isOver);
+		BattleScreen.instance.SkillTimelinePreview(isOver ? sk : null);
 	}
 	
 }

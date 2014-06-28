@@ -65,6 +65,7 @@ public class BattleManager : MonoBehaviour {
 		StartCoroutine(Coroutine_StartBattle());
 		CameraManager.instance.battle_plane_behind_player_animation.GetComponent<SpriteRenderer>().color = Color.clear;
 		enemy_moster.main_renderer.color = Color.white;
+		BattleScreen.instance.SetupForBattle();
 	}
 	IEnumerator Coroutine_IntroBattleExplorationFlash()
 	{

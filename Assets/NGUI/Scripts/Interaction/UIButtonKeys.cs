@@ -40,38 +40,50 @@ public class UIButtonKeys : MonoBehaviour
 	{
 		if (enabled && NGUITools.GetActive(gameObject))
 		{
-			switch (key)
+			UIButtonKeys ubk = GetNextGameObject(key);
+			while (ubk != null && NGUITools.GetActive(ubk.gameObject) != true)
 			{
-			case KeyCode.LeftArrow:
-				if (selectOnLeft != null) UICamera.selectedObject = selectOnLeft.gameObject;
-				break;
-			case KeyCode.RightArrow:
-				if (selectOnRight != null) UICamera.selectedObject = selectOnRight.gameObject;
-				break;
-			case KeyCode.UpArrow:
-				if (selectOnUp != null) UICamera.selectedObject = selectOnUp.gameObject;
-				break;
-			case KeyCode.DownArrow:
-				if (selectOnDown != null) UICamera.selectedObject = selectOnDown.gameObject;
-				break;
-			case KeyCode.Tab:
-				if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
-				{
-					if (selectOnLeft != null) UICamera.selectedObject = selectOnLeft.gameObject;
-					else if (selectOnUp != null) UICamera.selectedObject = selectOnUp.gameObject;
-					else if (selectOnDown != null) UICamera.selectedObject = selectOnDown.gameObject;
-					else if (selectOnRight != null) UICamera.selectedObject = selectOnRight.gameObject;
-				}
-				else
-				{
-					if (selectOnRight != null) UICamera.selectedObject = selectOnRight.gameObject;
-					else if (selectOnDown != null) UICamera.selectedObject = selectOnDown.gameObject;
-					else if (selectOnUp != null) UICamera.selectedObject = selectOnUp.gameObject;
-					else if (selectOnLeft != null) UICamera.selectedObject = selectOnLeft.gameObject;
-				}
-				break;
+				ubk = ubk.GetNextGameObject(key);
 			}
+			if (ubk != null)
+				UICamera.selectedObject = ubk.gameObject;
 		}
+	}
+
+	public UIButtonKeys GetNextGameObject(KeyCode key)
+	{
+		switch (key)
+		{
+		case KeyCode.LeftArrow:
+			if (selectOnLeft != null) return selectOnLeft;
+			break;
+		case KeyCode.RightArrow:
+			if (selectOnRight != null) return selectOnRight;
+			break;
+		case KeyCode.UpArrow:
+			if (selectOnUp != null) return selectOnUp;
+			break;
+		case KeyCode.DownArrow:
+			if (selectOnDown != null) return selectOnDown;
+			break;
+		case KeyCode.Tab:
+			if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+			{
+				if (selectOnLeft != null) return selectOnLeft;
+				else if (selectOnUp != null) return selectOnUp;
+				else if (selectOnDown != null) return selectOnDown;
+				else if (selectOnRight != null) return selectOnRight;
+			}
+			else
+			{
+				if (selectOnRight != null) return selectOnRight;
+				else if (selectOnDown != null) return  selectOnDown;
+				else if (selectOnUp != null) return selectOnUp;
+				else if (selectOnLeft != null) return selectOnLeft;
+			}
+			break;
+		}
+		return null;
 	}
 
 	void OnClick ()
