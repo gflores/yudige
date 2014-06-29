@@ -14,6 +14,7 @@ public class ExplorationScreen : MonoBehaviour {
 	}
 	public void MakeGoTo(bool set_music = true)
 	{
+		ExplorationScreenManager.instance.NotifyChangedScreen(this);
 		GameManager.instance.current_screen = this;
 		SetCameraToThis();
 		if (set_music)

@@ -7,6 +7,7 @@ public class MostersManager : MonoBehaviour {
 
 	public MosterData[] mosters_list {get; set;}
 	public List<MosterData> eliminated_mosters_list {get; set;}
+	public List<MosterData> eliminated_dark_mosters_list {get; set;}
 	public List<MosterData> evolved_mosters_list {get; set;}
 
 	public bool can_check_evolution {get; set;}
@@ -79,6 +80,12 @@ public class MostersManager : MonoBehaviour {
 			eliminated_mosters_list.Add(moster);
 		PilliersManager.instance.RefreshPilliers();
 	}
+	public void AddToEliminatedDark(MosterData moster)
+	{
+		if (eliminated_dark_mosters_list.Contains(moster) == false)
+			eliminated_dark_mosters_list.Add(moster);
+		PilliersManager.instance.RefreshPilliers();
+	}
 	public void AddToEvolved(MosterData moster)
 	{
 		if (evolved_mosters_list.Contains(moster) == false)
@@ -87,6 +94,10 @@ public class MostersManager : MonoBehaviour {
 	public bool IsEliminated(MosterData moster)
 	{
 		return eliminated_mosters_list.Contains(moster);
+	}
+	public bool IsEliminatedDark(MosterData moster)
+	{
+		return eliminated_dark_mosters_list.Contains(moster);
 	}
 	public bool WasEvolvedTo(MosterData moster)
 	{

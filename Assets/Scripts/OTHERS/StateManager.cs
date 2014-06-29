@@ -51,13 +51,13 @@ public class StateManager : MonoBehaviour {
 		{
 			GameManager.instance.battle_gui_camera.enabled = true;
 			GameManager.instance.battle_element_camera.enabled = true;
-			BattleTimeFlowing(true);
+//			BattleTimeFlowing(true);
 		}
 		else
 		{
 			GameManager.instance.battle_gui_camera.enabled = false;
 			GameManager.instance.battle_element_camera.enabled = false;
-			BattleTimeFlowing(false);
+//			BattleTimeFlowing(false);
 		}
 		if (current_states.Contains(State.USE_KARMA_MENU) == true || current_states.Contains(State.EXPLORATION_MENU) == true )
 		{

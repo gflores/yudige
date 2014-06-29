@@ -331,12 +331,17 @@ public class BattleManager : MonoBehaviour {
 			1f, 0f, 2f));
 		
 		yield return new WaitForSeconds(2f);
-		enemy_moster.moster_data.moster_exploration.gameObject.SetActive(false);
+		if (MostersManager.instance.IsEliminated(enemy_moster.moster_data) == false)
+		{
+			Player.instance.current_karma += enemy_moster.karma_points_rewards;
+			MostersManager.instance.AddToEliminated(enemy_moster.moster_data);
+		}
+		else
+			MostersManager.instance.AddToEliminatedDark(enemy_moster.moster_data);
+		enemy_moster.moster_data.MosterStateUpdate();
 
 		enemy_moster.generic_animator.SetBool("IsSick", false);
 
-		Player.instance.current_karma += enemy_moster.karma_points_rewards;
-		MostersManager.instance.AddToEliminated(enemy_moster.moster_data);
 		Debug.LogWarning("ENEMY IS DEAD !!");
 
 		StateManager.instance.current_states.Remove(StateManager.State.BATTLE);

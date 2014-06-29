@@ -67,6 +67,7 @@ public class SavedGameData
 	public int base_shield;
 	public int[] base_element_affinities;
 	public List<int> eliminated_mosters_list;
+	public List<int> eliminated_dark_mosters_list;
 	public List<int> evolved_mosters_list;
 	public float time_lived;
 	public List<bool> pickup_karmic_point_state_list;
@@ -79,6 +80,7 @@ public class SavedGameData
 		save_game_data.is_new_game = true;
 		save_game_data.is_in_tutorial = false;
 		save_game_data.eliminated_mosters_list = new List<int>();
+		save_game_data.eliminated_dark_mosters_list = new List<int>();
 		save_game_data.evolved_mosters_list = new List<int>();
 		save_game_data.is_in_battle = false;
 		save_game_data.pickup_karmic_point_state_list = new List<bool>();
