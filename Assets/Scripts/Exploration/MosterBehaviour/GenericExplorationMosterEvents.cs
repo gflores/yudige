@@ -50,6 +50,7 @@ public class GenericExplorationMosterEvents : MonoBehaviour {
 			         StateManager.instance.current_states.Contains(StateManager.State.SCRIPTED_EVENT) == false &&
 			         StateManager.instance.current_states.Contains(StateManager.State.EXPLORATION) == true)
 			{
+				Debug.LogWarning("ni !");
 				if ((on_validate != null && on_validate.is_available == false) ||
 				    (on_agress != null && on_agress.is_available == false))
 					return ;
@@ -60,6 +61,10 @@ public class GenericExplorationMosterEvents : MonoBehaviour {
 				}
 				else
 					BattleManager.instance.StartBattle(moster.moster_battle);
+			}
+			if (Input.GetButtonDown("Agress"))
+			{
+				Debug.LogWarning("AGRESS!");
 			}
 		}
 	}

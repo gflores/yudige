@@ -20,6 +20,18 @@ public class TestManager : MonoBehaviour {
 		}
 		if (Input.GetKey(KeyCode.LeftShift))
 	    {
+			if (Input.GetKeyDown(KeyCode.P))
+			{
+				Debug.LogWarning("Player loose collision !");
+				PlayerExploration.instance.hitboxes_transform.gameObject.SetActive(!PlayerExploration.instance.hitboxes_transform.gameObject.activeSelf);
+			}
+			if (Input.GetKeyDown(KeyCode.U))
+			{
+				Debug.LogWarning("states!");
+				foreach(var s in StateManager.instance.current_states)
+					Debug.LogWarning(s);
+			}
+
 			if (Input.GetKeyDown(KeyCode.A))
 			{
 				Debug.LogWarning("TEST skill effect");
@@ -48,7 +60,7 @@ public class TestManager : MonoBehaviour {
 			}
 			if (Input.GetKeyDown(KeyCode.F))
 			{
-				Debug.LogWarning("TEST player speed up: " + player_moster_to_evolve_test.moster_name);
+				Debug.LogWarning("TEST player speed up");
 				PlayerExploration.instance.move_speed *= 1.5f;
 			}
 			if (Input.GetKeyDown(KeyCode.Q))

@@ -64,6 +64,11 @@ public class GameManager : MonoBehaviour {
 			intro_sequence.StartSequence();
 			intro_sequence.WantDoNextAction();
 		}
+		else
+		{
+			MostersManager.instance.AddToEliminated(baby_moster);
+			baby_moster.MosterStateUpdate();
+		}
 	}
 	IEnumerator AutoSaveContinuously()
 	{
@@ -104,6 +109,7 @@ public class GameManager : MonoBehaviour {
 		Player.instance.current_life = player_starting_life;
 		Player.instance.ApplyEvolutionChanges(starting_moster);
 		MostersManager.instance.eliminated_mosters_list = new List<MosterData>();
+		MostersManager.instance.eliminated_dark_mosters_list = new List<MosterData>();
 		MostersManager.instance.evolved_mosters_list = new List<MosterData>();
 		PlayerExploration.instance.transform.position = GetSpawnPoint().position;
 		GetSpawnScreen().MakeGoTo(!IsInTutorial());
@@ -144,7 +150,15 @@ public class GameManager : MonoBehaviour {
 		{
 			MosterData moster_data = MostersManager.instance.IndexToMosterData(moster_index);
 			MostersManager.instance.eliminated_mosters_list.Add(moster_data);
-			moster_data.moster_exploration.gameObject.SetActive(false);
+//			moster_data.moster_exploration.gameObject.SetActive(false);
+		}
+
+		MostersManager.instance.eliminated_dark_mosters_list = new List<MosterData>();
+		foreach(var moster_index in SaveManager.current_saved_game.eliminated_dark_mosters_list)
+		{
+			MosterData moster_data = MostersManager.instance.IndexToMosterData(moster_index);
+			MostersManager.instance.eliminated_dark_mosters_list.Add(moster_data);
+//			moster_data.moster_exploration.gameObject.SetActive(false);
 		}
 
 		MostersManager.instance.evolved_mosters_list = new List<MosterData>();
@@ -175,6 +189,10 @@ public class GameManager : MonoBehaviour {
 		SaveManager.current_saved_game.eliminated_mosters_list = new List<int>();
 		foreach(var moster_data in MostersManager.instance.eliminated_mosters_list)
 			SaveManager.current_saved_game.eliminated_mosters_list.Add(MostersManager.instance.MosterDataToIndex(moster_data));
+
+		SaveManager.current_saved_game.eliminated_dark_mosters_list = new List<int>();
+		foreach(var moster_data in MostersManager.instance.eliminated_dark_mosters_list)
+			SaveManager.current_saved_game.eliminated_dark_mosters_list.Add(MostersManager.instance.MosterDataToIndex(moster_data));
 
 		SaveManager.current_saved_game.evolved_mosters_list = new List<int>();
 		foreach(var moster_data in MostersManager.instance.evolved_mosters_list)
