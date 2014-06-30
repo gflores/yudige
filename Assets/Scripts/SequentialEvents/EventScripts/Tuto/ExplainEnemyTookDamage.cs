@@ -29,57 +29,57 @@ public class ExplainEnemyTookDamage : SequentialEventValidate {
 		ElementRelation element_relation = ElementManager.instance.GetRelationBetween(player_element, enemy_element);
 		if (player_element == Element.DARK)
 		{
-			PopupSmall.instance.text_label.text = "Your attack was of type Void. The concept of nothingness\n" +
-				"Void is the only thing which can negate absolute perfection, which is a conceptual reality.\n" +
-					"But the void get crushed by fire and earth, which are the two elements which manifest concrete reality";
+			PopupSmall.instance.text_label.text = "Your attack was of type Void : the concept of nothingness.\n" +
+				"Void is the only thing which can negate absolute perfection, which is an ideal reality.\n" +
+					"But the void get crushed by fire and earth, which are the two elements which manifest concrete reality.";
 		}
 		else if (player_element == Element.LIGHT)
 		{
-			PopupSmall.instance.text_label.text = "Your attack was of type Absolute. The conceptual ultimate reality\n" +
-				"Conceptual perfection is always superior to concrete manifestation of reality like fire and earth .\n" +
-					"But even something as powerful as conceptual perfection can be suppressed by its denial.";
+			PopupSmall.instance.text_label.text = "Your attack was of type Absolute : the ideal ultimate reality.\n" +
+				"Ideal perfection is always superior to concrete manifestation of reality like fire and earth.\n" +
+					"But even something as powerful as ideal perfection can be suppressed by it's denial.";
 		}
 		else if (player_element == Element.FIRE)
 		{
-			PopupSmall.instance.text_label.text = "Your attack was of type Fire, one of the two natural elements in this world." +
-				"Only a concrete manifestation of reality like fire can crush the concept of non-reality." +
-					"But because fire is bound to reality, it will never be able transcend absolute perfection." +
-					"Fire is also naturally weak against Rock";
+			PopupSmall.instance.text_label.text = "Your attack was of type Fire : one of the two natural elements in this world.\n" +
+				"Only a concrete manifestation of reality like fire can crush the concept of non-reality.\n" +
+					"But because fire is bound to reality, it will never be able transcend absolute perfection.\n" +
+					"Fire is also naturally weak against Rock.";
 		}
 		else if (player_element == Element.ROCK)
 		{
-			PopupSmall.instance.text_label.text = "Your attack was of type Rock. One of the two natural elements in this world" +
-				"Only a concrete manifestation of reality like earth can crush the concept of non-reality." +
-					"But because earth is bound to reality, it will never be able transcend absolute perfection." +
-					"Rock is also naturally strong against Fire";
+			PopupSmall.instance.text_label.text = "Your attack was of type Rock : one of the two natural elements in this world.\n" +
+				"Only a concrete manifestation of reality like earth can crush the concept of non-reality.\n" +
+					"But because earth is bound to reality, it will never be able transcend absolute perfection.\n" +
+					"Rock is also naturally strong against Fire.";
 		}
-		PopupSmall.instance.Show(110,-41, 527, 300);
+		PopupSmall.instance.Show(25,80, 527, 200);
 		yield return null;
 	}
 	IEnumerator _1(){
 		if (player_element == Element.DARK)
 		{
 			PopupSmall.instance.text_label.text = "To recap:\n" +
-				"Void is strong against Absolute\n" +
-					"Void is weak against Fire and Rock";
+				"Void is strong against Absolute.\n" +
+					"Void is weak against Fire and Rock.";
 		}
 		else if (player_element == Element.LIGHT)
 		{
 			PopupSmall.instance.text_label.text = "To recap:\n" +
-				"Absolute is strong against Fire and Rock\n" +
-					"Absolute is weak against Void";
+				"Absolute is strong against Fire and Rock.\n" +
+					"Absolute is weak against Void.";
 		}
 		else if (player_element == Element.FIRE)
 		{
 			PopupSmall.instance.text_label.text = "To recap:\n" +
-				"Fire is strong against Void\n" +
-					"Fire is weak against Absolute and Rock";
+				"Fire is strong against Void.\n" +
+					"Fire is weak against Absolute and Rock.";
 		}
 		else if (player_element == Element.ROCK)
 		{
 			PopupSmall.instance.text_label.text = "To recap:\n" +
-				"Rock is strong against Void and Fire\n" +
-					"Rock is weak against Absolute";
+				"Rock is strong against Void and Fire.\n" +
+					"Rock is weak against Absolute.";
 		}
 		yield return null;
 	}
@@ -88,15 +88,15 @@ public class ExplainEnemyTookDamage : SequentialEventValidate {
 		ElementRelation element_relation = ElementManager.instance.GetRelationBetween(player_element, enemy_element);
 		if (element_relation == ElementRelation.NORMAL)
 		{
-			PopupSmall.instance.text_label.text = "When the attacking and defending types are the same, the damages are reduced by the value of the defending affinity\n";
+			PopupSmall.instance.text_label.text = "When the attacking and defending types are the same, the damages are reduced by the value of the defending affinity.\n";
 		}
 		else if (element_relation == ElementRelation.STRONG)
 		{
-			PopupSmall.instance.text_label.text = "When the attacking type is strong against the defending type, the damages are doubled and the defending affinity is taken as extra damages";
+			PopupSmall.instance.text_label.text = "When the attacking type is strong against the defending type, the damages are doubled and the defending affinity is taken as extra damage.";
 		}
 		else if (element_relation == ElementRelation.WEAK)
 		{
-			PopupSmall.instance.text_label.text = "When the attacking type is weak against the defending type, the damages are halved and then reduced by the value of the defending affinity";
+			PopupSmall.instance.text_label.text = "When the attacking type is weak against the defending type, the damages are halved and then reduced by the value of the defending affinity.";
 		}
 		yield return null;
 	}
@@ -111,20 +111,20 @@ public class ExplainEnemyTookDamage : SequentialEventValidate {
 		{
 			PopupSmall.instance.text_label.text = "You attacked using the element " + player_element_string + " with a power of " + player_power+"\n" +
 				"against the enemy which defended with the element " + enemy_element_string + " with an affinity of: " + enemy_power + "\n" +
-					"So the enemy took: "+player_power +" - "+enemy_power + " = " + Mathf.Max(0,player_power -enemy_power);
+					"So the enemy took: "+player_power +" - "+enemy_power + " = " + Mathf.Max(0,player_power -enemy_power) + ".";
 
 		}
 		else if (element_relation == ElementRelation.STRONG)
 		{
 			PopupSmall.instance.text_label.text = "You have the advantage using the element " + player_element_string + " with a power of " + player_power+"\n" +
 				"against the enemy which defended with the element " + enemy_element_string + " with an affinity of: " + enemy_power + "\n"+
-			"So the enemy took: ("+player_power +" * 2) + " + enemy_power + " = " + Mathf.Max(0,player_power * 2 + enemy_power);
+			"So the enemy took: ("+player_power +" * 2) + " + enemy_power + " = " + Mathf.Max(0,player_power * 2 + enemy_power) + ".";
 		}
 		else if (element_relation == ElementRelation.WEAK)
 		{
 			PopupSmall.instance.text_label.text = "You have the disadvantage using the element " + player_element_string + " with a power of " + player_power+"\n" +
 				"against the enemy which defended with the element " + enemy_element_string + " with an affinity of: " + enemy_power + "\n"+
-					"So the enemy took: ("+player_power +" / 2) - " + enemy_power + " = " + Mathf.Max(0,player_power / 2 - enemy_power);
+					"So the enemy took: ("+player_power +" / 2) - " + enemy_power + " = " + Mathf.Max(0,player_power / 2 - enemy_power) + ".";
 		}
 		yield return null;
 	}

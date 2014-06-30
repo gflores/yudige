@@ -22,9 +22,9 @@ public class ExplainEnemyAttack : SequentialEventValidate {
 		
 		CameraManager.instance.SetColorToFadePlane(new Color(0, 0, 0, 0.3f));
 		PopupSmall.instance.text_label.text = "The enemy has started to attack.\n" +
-			"Like you, his attacks have type. You can predict the type of the attack looking at its color:\n" +
+			"Like you, his attacks have a type. You can predict the type of the attack looking at its color:\n" +
 			"Void is black, Absolute is white, Rock is brown, and Fire is red.";
-		PopupSmall.instance.Show(110,-41, 527, 300);
+		PopupSmall.instance.Show(20,80, 527, 200);
 		yield return null;
 	}
 	IEnumerator _1(){
@@ -33,7 +33,7 @@ public class ExplainEnemyAttack : SequentialEventValidate {
 		int current_affinity = PlayerBattle.instance.GetEffectiveBattleElementAffinity(element);
 		
 		PopupSmall.instance.text_label.text = "Your defensive type instantly change when you start casting a skill.";
-		PopupSmall.instance.Show(110,-41, 527, 300);
+		PopupSmall.instance.Show(20,80, 527, 150);
 		yield return null;
 	}
 }

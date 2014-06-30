@@ -19,12 +19,15 @@ public class PauseScreen : MonoBehaviour
 	public SkillInfo element4slot3;
 	public UILabel life_label;
 	public UILabel shield_label;
+	public UILabel name_label;
+
 
 
 	void FixedUpdate()
 	{
 		life_label.text = "Health : " + Player.instance.current_life;
 		shield_label.text = "Shield : " + Player.instance.GetEffectiveMaxShield();
+		name_label.text = Player.instance.current_moster.moster_name;
 
 		SetSkillInfo();
 	}
@@ -65,5 +68,16 @@ public class PauseScreen : MonoBehaviour
 		element4slot3.gameObject.SetActive (element4slot3.sk != null);
 
 		
+	}
+
+	void OnTitleScreen()
+	{
+		Application.LoadLevel("main_menu");
+	}
+
+	void OnExit()
+	{
+		Debug.Log ("peace out");
+		Application.Quit();
 	}
 }

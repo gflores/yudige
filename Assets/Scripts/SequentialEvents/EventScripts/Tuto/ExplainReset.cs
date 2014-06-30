@@ -17,8 +17,8 @@ public class ExplainReset : SequentialEventValidate {
 	}
 	IEnumerator _0(){
 		CameraManager.instance.SetColorToFadePlane(new Color(0, 0, 0, 0.3f));
-		PopupSmall.instance.text_label.text = "When you manually reset, your type instantly go to being neutral, meaning you will take damages regardless of your affinities, or the attack type\n";
-		PopupSmall.instance.Show(110,-41, 527, 300);
+		PopupSmall.instance.text_label.text = "When you manually reset, your type instantly becomes neutral, meaning you will take damages regardless of your affinities, or the attack type\n";
+		PopupSmall.instance.Show(25,60, 527, 150);
 		yield return null;
 	}
 }

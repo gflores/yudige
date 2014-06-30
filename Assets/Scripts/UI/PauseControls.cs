@@ -7,6 +7,7 @@ public class PauseControls : MonoBehaviour
 {
 	public UIPanel menu_panel;
 	public UIPanel karma_panel;
+	public GameObject first_button;
 	
 	
 	
@@ -21,6 +22,8 @@ public class PauseControls : MonoBehaviour
 				{
 					karma_panel.gameObject.SetActive(false);
 					menu_panel.gameObject.SetActive(true);
+
+
 				}
 				else
 				{

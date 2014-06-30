@@ -8,8 +8,8 @@ public class MosterTutoAgress : BaseExplorationInteraction {
 		OnStartEvent();
 		//Start
 		
-		yield return StartCoroutine(_0());
-		yield return StartCoroutine(_1());
+		//yield return StartCoroutine(_0());
+		//yield return StartCoroutine(_1());
 		yield return StartCoroutine(_2());
 		yield return StartCoroutine(_3());
 
@@ -31,7 +31,7 @@ public class MosterTutoAgress : BaseExplorationInteraction {
 		PopupSmall.instance.Hide();
 		yield return StartCoroutine(
 			PopupDialog.instance.Coroutine_MakeSay(moster_data.moster_name,
-		                                       "its quite unique to be able to have a look into myself"));
+		                                       "being able to observe myself is a unique experience."));
 		PopupDialog.instance.Show ();
 		yield return new WaitForSeconds(0.001f);
 	}
@@ -39,7 +39,7 @@ public class MosterTutoAgress : BaseExplorationInteraction {
 		PopupSmall.instance.Hide();
 		yield return StartCoroutine(
 			PopupDialog.instance.Coroutine_MakeSay(PopupDialog.instance.protag_name,
-		                                       "Your eyes, my friend, ", true));
+		                                       "To be or not to be.", true));
 		PopupDialog.instance.Show ();
 		yield return new WaitForSeconds(0.001f);
 	}
@@ -47,7 +47,7 @@ public class MosterTutoAgress : BaseExplorationInteraction {
 		PopupSmall.instance.Hide();
 		yield return StartCoroutine(
 			PopupDialog.instance.Coroutine_MakeSay(PopupDialog.instance.protag_name,
-		                                       "are laid upon your own non-existence."));
+		                                       " That's a choice you never had."));
 		PopupDialog.instance.Show ();
 		yield return new WaitForSeconds(0.001f);
 	}

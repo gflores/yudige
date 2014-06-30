@@ -25,9 +25,15 @@ public class MainMenuManager : MonoBehaviour {
 		MasterGameManager.want_new_game = true;
 		Application.LoadLevel("main");
 	}
+
+	public void ExitGame()
+	{
+		Application.Quit();
+	}
 	
 	void Update()
 	{
+		/*
 		if (Input.GetKey(KeyCode.LeftShift))
 		{
 			if (Input.GetKeyDown(KeyCode.A))
@@ -47,6 +53,7 @@ public class MainMenuManager : MonoBehaviour {
 				Application.Quit();
 			}
 		}
+		*/
 
 	}
 

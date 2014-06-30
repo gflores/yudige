@@ -12,10 +12,10 @@ public class ScreenTeleportationPointCustom2 : ScreenTeleportationPoint {
 			yield return new WaitForSeconds(0.15f);
 			PlayerExploration.instance.transform.position = linked_teleportation_point.spawn_point.position;
 			linked_teleportation_point.exploration_screen.MakeGoTo();
-			PopupText.instance.Show(0, 200, 500, 300);
+			PopupText.instance.Show(0, 0, 500, 200);
 			PopupText.instance.text_label.text = "";
 			yield return StartCoroutine(StringUtils.LaunchProgressiveLabel(
-				"Now that he experienced what existence felt like ",
+				"Now that he experienced what existence felt like, ",
 				PopupText.instance.text_label
 				));
 			yield return StartCoroutine(WaitForValidation());

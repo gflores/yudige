@@ -23,6 +23,7 @@ public class BattleScreen : MonoBehaviour
 	public UILabel boss_light_label;
 	public UILabel boss_rock_label;
 	public UILabel boss_fire_label;
+	public UILabel boss_name;
 
 	void Awake()
 	{
@@ -68,6 +69,7 @@ public class BattleScreen : MonoBehaviour
 		boss_light_label.text = BattleManager.instance.enemy_moster.GetEffectiveAffinity(Element.LIGHT).ToString();
 		boss_rock_label.text = BattleManager.instance.enemy_moster.GetEffectiveAffinity(Element.ROCK).ToString();
 		boss_fire_label.text = BattleManager.instance.enemy_moster.GetEffectiveAffinity(Element.FIRE).ToString();
+		boss_name.text = BattleManager.instance.enemy_moster.moster_data.moster_name;
 
 	}
 

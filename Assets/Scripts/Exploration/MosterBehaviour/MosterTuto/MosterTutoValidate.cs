@@ -28,7 +28,7 @@ public class MosterTutoValidate : BaseExplorationInteraction {
 		yield return StartCoroutine(_17());
 		//End
 		PopupDialog.instance.Hide();
-		PopupSmall.instance.Show(0, 0, 200, 200);
+		PopupSmall.instance.Show(0, 0, 200, 100);
 		PopupSmall.instance.text_label.text = "Press C to begin the procedure for suppression";
 		generic_events.can_aggress = true;
 		OnEndEvent();
@@ -37,14 +37,14 @@ public class MosterTutoValidate : BaseExplorationInteraction {
 		PopupDialog.instance.Show ();
 		yield return StartCoroutine(
 			PopupDialog.instance.Coroutine_MakeSay(moster_data.moster_name,
-		                                       "Oh my", true));
+		                                       "Oh my...", true));
 		yield return new WaitForSeconds(0.001f);
 	}
 	IEnumerator _1(){
 		PopupDialog.instance.Show ();
 		yield return StartCoroutine(
 			PopupDialog.instance.Coroutine_MakeSay(moster_data.moster_name,
-		                                       "And I thought it was impossible for another being to be me", true));
+		                                       "And I thought it was impossible for another being to be me.", true));
 		yield return new WaitForSeconds(0.001f);
 	}
 	IEnumerator _2(){
@@ -65,14 +65,14 @@ public class MosterTutoValidate : BaseExplorationInteraction {
 		PopupDialog.instance.Show ();
 		yield return StartCoroutine(
 			PopupDialog.instance.Coroutine_MakeSay(moster_data.moster_name,
-		                                       "\nI hope you understand how surprised I may be by witnessing something impossible...", true));
+		                                       "I hope you understand how surprised I may be by witnessing something impossible...", true));
 		yield return new WaitForSeconds(0.001f);
 	}
 	IEnumerator _5(){
 		PopupDialog.instance.Show ();
 		yield return StartCoroutine(
 			PopupDialog.instance.Coroutine_MakeSay(PopupDialog.instance.protag_name,
-		                                       "\nI also am very confused experiencing this reality, so I can relate.", true));
+		                                       "I am also very confused experiencing this reality, so I can relate.", true));
 		yield return new WaitForSeconds(0.001f);
 	}
 	IEnumerator _6(){
@@ -93,14 +93,14 @@ public class MosterTutoValidate : BaseExplorationInteraction {
 		PopupDialog.instance.Show ();
 		yield return StartCoroutine(
 			PopupDialog.instance.Coroutine_MakeSay(PopupDialog.instance.protag_name,
-		                                       " existent being."));
+		                                       " an existent being."));
 		yield return new WaitForSeconds(0.001f);
 	}
 	IEnumerator _9(){
 		PopupDialog.instance.Show ();
 		yield return StartCoroutine(
 			PopupDialog.instance.Coroutine_MakeSay(moster_data.moster_name,
-		                                       "I actually have a name, ", true));
+		                                       "I actually have a name,", true));
 		yield return new WaitForSeconds(0.001f);
 	}
 	IEnumerator _10(){
@@ -114,14 +114,14 @@ public class MosterTutoValidate : BaseExplorationInteraction {
 		PopupDialog.instance.Show ();
 		yield return StartCoroutine(
 			PopupDialog.instance.Coroutine_MakeSay(PopupDialog.instance.protag_name,
-		                                       "I know how important it is to put labels on entities to tell them apart, ", true));
+		                                       "I know how important it is to put labels on entities to tell them apart.", true));
 		yield return new WaitForSeconds(0.001f);
 	}
 	IEnumerator _12(){
 		PopupDialog.instance.Show ();
 		yield return StartCoroutine(
 			PopupDialog.instance.Coroutine_MakeSay(PopupDialog.instance.protag_name,
-		                                       "it is needed if you want to keep your own integrity."));
+		                                       " It is needed if you want to keep your own integrity."));
 		yield return new WaitForSeconds(0.001f);
 	}
 	IEnumerator _13(){
@@ -135,7 +135,7 @@ public class MosterTutoValidate : BaseExplorationInteraction {
 		PopupDialog.instance.Show ();
 		yield return StartCoroutine(
 			PopupDialog.instance.Coroutine_MakeSay(moster_data.moster_name,
-		                                       "you talk non-sense."));
+		                                       "you make no sense."));
 		yield return new WaitForSeconds(0.001f);
 	}
 	IEnumerator _15(){
@@ -149,7 +149,7 @@ public class MosterTutoValidate : BaseExplorationInteraction {
 		PopupDialog.instance.Show ();
 		yield return StartCoroutine(
 			PopupDialog.instance.Coroutine_MakeSay(PopupDialog.instance.protag_name,
-		                                       "maybe you will understand me once you will experience what non-existence feels like."));
+		                                       "experiencing non-existence will help you understand."));
 		yield return new WaitForSeconds(0.001f);
 	}
 	IEnumerator _17(){

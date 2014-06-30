@@ -65,7 +65,7 @@ public class TutoScriptedBattle : SequentialAction {
 
 		//DEUXIEME ATTAQUE
 		Debug.LogWarning("Highlight: 'note that your previous skill attack has been consumed once you used it. Choose another skill'");
-		PopupSmall.instance.text_label.text = "Note that your previous skill has been consumed once you used it.\n" +
+		PopupSmall.instance.text_label.text = "Note that your skills are consumed when you use them.\n" +
 			"Choose another skill.";
 		PopupSmall.instance.Show (0,0, 300, 100);
 		yield return StartCoroutine(Coroutine_WaitPlayerLaunchAnyAttack());

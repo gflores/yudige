@@ -20,9 +20,9 @@ public class ExplainShield : SequentialEventValidate {
 		int current_affinity = PlayerBattle.instance.GetEffectiveBattleElementAffinity(element);
 		
 		CameraManager.instance.SetColorToFadePlane(new Color(0, 0, 0, 0.3f));
-		PopupSmall.instance.text_label.text = "Your health is protected by a shield which regenerate over time.\n" +
-			"But it won't regenerate anymore after it has break\n";
-		PopupSmall.instance.Show(110,-41, 527, 300);
+		PopupSmall.instance.text_label.text = "Your health is protected by a shield which regenerates over time.\n" +
+			"But it won't regenerate anymore once it's depleted.\n";
+		PopupSmall.instance.Show(25,60, 527, 150);
 		yield return null;
 	}
 }

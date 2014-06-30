@@ -34,7 +34,8 @@ public class SkillButton : MonoBehaviour
 
 	void OnClick()
 	{
-		if (sk != null && button.isEnabled && sk.is_consumed == false)
+		if (StateManager.instance.current_states.Contains(StateManager.State.BATTLE) && !StateManager.instance.current_states.Contains(StateManager.State.SCRIPTED_EVENT)
+		    && sk != null && button.isEnabled && sk.is_consumed == false)
 			PlayerBattle.instance.ClickOnSkill (sk);
 	}
 

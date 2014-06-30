@@ -24,7 +24,7 @@ public class UIButtonKeys : MonoBehaviour
 
 	void OnEnable ()
 	{
-		if (startsSelected && UICamera.selectedObject == null)
+		if (startsSelected)
 		{
 			if (!NGUITools.GetActive(UICamera.selectedObject))
 			{
@@ -39,7 +39,7 @@ public class UIButtonKeys : MonoBehaviour
 	 
 	void OnKey (KeyCode key)
 	{
-		if (enabled && NGUITools.GetActive(gameObject))
+		if (enabled && NGUITools.GetActive(gameObject) && !(StateManager.instance != null && StateManager.instance.current_states.Contains(StateManager.State.SCRIPTED_EVENT)))
 		{
 			UIButtonKeys ubk = GetNextGameObject(key);
 			while (ubk != null && NGUITools.GetActive(ubk.gameObject) != true)
