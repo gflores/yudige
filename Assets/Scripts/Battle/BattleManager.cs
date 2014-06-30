@@ -402,6 +402,9 @@ public class BattleManager : MonoBehaviour {
 		StateManager.instance.current_states.Remove(StateManager.State.BATTLE);
 		StateManager.instance.current_states.Add(StateManager.State.EXPLORATION);
 		StateManager.instance.UpdateFromStates();
+		PopupDialog.instance.Hide();
+		PopupSmall.instance.Hide();
+		PopupText.instance.Hide();
 	}
 	//PLAYER ACTIONS END
 }

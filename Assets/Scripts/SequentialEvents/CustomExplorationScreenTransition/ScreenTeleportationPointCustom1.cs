@@ -20,12 +20,12 @@ public class ScreenTeleportationPointCustom1 : ScreenTeleportationPoint {
 				));
 			yield return StartCoroutine(WaitForValidation());
 			yield return StartCoroutine(StringUtils.LaunchProgressiveLabel(
-				"The sensations of feeling reality were fascinating to him.\n",
+				"The sensations of feeling reality were something new to him.\n",
 				PopupText.instance.text_label
 				));
 			yield return StartCoroutine(WaitForValidation());
 			yield return StartCoroutine(StringUtils.LaunchProgressiveLabel(
-				"But The Void quickly got used to its own existence and could navigate quite easily in this world\n",
+				"But The Void quickly got used to its own existence and could easily navigate in the world\n",
 				PopupText.instance.text_label
 				));
 			yield return StartCoroutine(WaitForValidation());
