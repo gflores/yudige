@@ -71,7 +71,7 @@ public class DeathSceneScript : SequentialEventValidate {
 		PopupText.instance.Show(0, 200, 500, 300);
 		PopupText.instance.text_label.text = "";
 		yield return StartCoroutine(StringUtils.LaunchProgressiveLabel(
-			"Dead from no health\n",
+			"How ironic it is for me to be taken out of existence.\n",
 			PopupText.instance.text_label
 			));
 		yield return null;
@@ -79,7 +79,7 @@ public class DeathSceneScript : SequentialEventValidate {
 	IEnumerator _1_no_health(){
 		PopupText.instance.text_label.text = "";
 		yield return StartCoroutine(StringUtils.LaunchProgressiveLabel(
-			"Dead from no health2\n",
+			"I shall come back in the most simple form.\n",
 			PopupText.instance.text_label
 			));
 		yield return null;

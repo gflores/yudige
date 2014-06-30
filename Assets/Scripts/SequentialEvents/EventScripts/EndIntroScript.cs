@@ -8,7 +8,7 @@ public class EndIntroScript : SequentialEventValidate {
 		OnStartEvent();
 		//Start
 		
-		yield return StartCoroutine(_0());
+//		yield return StartCoroutine(_0());
 		PopupDialog.instance.Hide();
 		ForceDoNextAction();
 
@@ -22,6 +22,7 @@ public class EndIntroScript : SequentialEventValidate {
 		Time.timeScale = 1;
 		//End
 		OnEndEvent();
+		yield return null;
 	}
 	
 	IEnumerator _0(){
