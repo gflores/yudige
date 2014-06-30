@@ -6,7 +6,9 @@ public class GenericExplorationMosterEvents : MonoBehaviour {
 	bool player_action_trigger_inside = false;
 	public BaseExplorationInteraction on_validate;
 	public BaseExplorationInteraction on_agress;
-
+	public bool can_validate_multiple_times = false;
+	public bool can_validate = true;
+	public bool can_aggress = true;
 	void Start()
 	{
 		if (on_validate != null)
@@ -30,26 +32,33 @@ public class GenericExplorationMosterEvents : MonoBehaviour {
 		}
 	}//titi
 
+
 	void Update () {
 		if (player_action_trigger_inside == true)
 		{
-			if (Player.instance.is_living_time_passing && Input.GetButtonDown("Validate") &&
+			if (can_validate && Player.instance.is_living_time_passing && Input.GetButtonDown("Validate") &&
 			    StateManager.instance.current_states.Contains(StateManager.State.SCRIPTED_EVENT) == false &&
 			    StateManager.instance.current_states.Contains(StateManager.State.EXPLORATION) == true)
 			{
-				if ((on_validate != null && on_validate.is_available == false) ||
-				    (on_agress != null && on_agress.is_available == false))
-					return ;
+//				if ((on_validate != null && on_validate.is_available == false) ||
+//				    (on_agress != null && on_agress.is_available == false))
+//					return ;
+				can_validate = false;
 				if (on_validate != null)
 				{
-					on_validate.Reinit();
+					if (can_validate_multiple_times)
+						on_validate.Reinit();
 					StartCoroutine(on_validate.Coroutine_LaunchStartSequence());
 				}
 			}
-			else if (Player.instance.is_living_time_passing && Input.GetButtonDown("Agress") &&
+			else if (can_aggress && Player.instance.is_living_time_passing && Input.GetButtonDown("Agress") &&
 			         StateManager.instance.current_states.Contains(StateManager.State.SCRIPTED_EVENT) == false &&
 			         StateManager.instance.current_states.Contains(StateManager.State.EXPLORATION) == true)
 			{
+				can_validate = false;
+				can_aggress = false;
+				CameraManager.instance.SetColorToFadePlane(Color.red);
+				StartCoroutine(CameraManager.instance.COROUTINE_MainCameraFadeToTransparent(0.5f));
 				Debug.LogWarning("ni !");
 				if ((on_validate != null && on_validate.is_available == false) ||
 				    (on_agress != null && on_agress.is_available == false))

@@ -18,6 +18,7 @@ public class IntroScript : SequentialEventValidate {
 		yield return StartCoroutine(_5());
 		yield return StartCoroutine(_6());
 		yield return StartCoroutine(_7());
+		yield return StartCoroutine(_8());
 		PopupDialog.instance.Hide();
 		ForceDoNextAction();
 
@@ -32,7 +33,7 @@ public class IntroScript : SequentialEventValidate {
 		PopupText.instance.Show(0, 200, 500, 300);
 		PopupText.instance.text_label.text = "";
 		yield return StartCoroutine(StringUtils.LaunchProgressiveLabel(
-			"There existed a being which wanted to destroy everything\n",
+			"There existed a being who wanted to destroy everything\n",
 			PopupText.instance.text_label
 		));
 		yield return new WaitForSeconds(0.001f);
@@ -89,7 +90,12 @@ public class IntroScript : SequentialEventValidate {
 		yield return new WaitForSeconds(0.5f);
 		yield return StartCoroutine(CameraManager.instance.COROUTINE_MainCameraFadeToTransparent(3f));
 		GameManager.instance.current_screen.ApplyBackgroundMusic();
+		yield return StartCoroutine(
+			PopupDialog.instance.Coroutine_MakeSay(PopupDialog.instance.protag_name,
+		                                       "How conveniently easy it is to go from non-existence to existence.", true));
+	}
+	IEnumerator _8(){
 		yield return StartCoroutine(PopupDialog.instance.Coroutine_MakeSay(PopupDialog.instance.protag_name,
-		                                                                   "How conveniently easy it is to be"));
+		                                                                   "But strangely, I have the feeling that doing the other way around won’t be as simple.", true));
 	}
 }

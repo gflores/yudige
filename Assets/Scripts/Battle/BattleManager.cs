@@ -182,6 +182,9 @@ public class BattleManager : MonoBehaviour {
 		TimelineEvent timeline_event_to_schedule;
 		
 		timeline_event_to_schedule = new TimelineEvent();
+		timeline_event_to_schedule.side = TimelineSide.ENEMY;
+		timeline_event_to_schedule.event_type = attack_to_schedule.is_burst ? TimelineEventType.ENEMY_BURST_ATTACK : TimelineEventType.PLAYER_BURST_ATTACK;
+		timeline_event_to_schedule.element = attack_to_schedule.element;
 		timeline_event_to_schedule.name = attack_to_schedule.element.ToString() + " ("+attack_to_schedule.damage.ToString() + ")";
 		timeline_event_to_schedule.time_remaining = EventsTimeline.instance.total_time;
 		timeline_event_to_schedule.on_complete_routine = Coroutine_EnemyAttackEffects(attack_to_schedule);

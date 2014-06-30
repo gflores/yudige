@@ -17,6 +17,7 @@ public class MosterTutoAgress : BaseExplorationInteraction {
 		OnEndEvent();
 	}
 	IEnumerator _0(){
+		PopupSmall.instance.Hide();
 		PopupDialog.instance.name_label.text = moster_data.moster_name;
 		PopupDialog.instance.text_label.text = "Nique ta race !";
 		PopupDialog.instance.Show ();

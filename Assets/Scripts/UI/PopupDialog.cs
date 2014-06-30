@@ -23,7 +23,7 @@ public class PopupDialog : MonoBehaviour
 	{
 		Show();
 		name_label.text = talk_name;
-		if (reinitialize_text == false)
+		if (reinitialize_text == true)
 			text_label.text = "";
 		yield return StartCoroutine(StringUtils.LaunchProgressiveLabel(
 			talk_text,

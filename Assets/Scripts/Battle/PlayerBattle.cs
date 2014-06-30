@@ -118,6 +118,7 @@ public class PlayerBattle : MonoBehaviour {
 		timeline_event_to_schedule.name = "BURST" + "(" +skill_to_schedule.skill_name +")";
 		timeline_event_to_schedule.side = TimelineSide.PLAYER;
 		timeline_event_to_schedule.event_type = TimelineEventType.PLAYER_BURST_ATTACK;
+		timeline_event_to_schedule.element = skill_to_schedule.element;
 		timeline_event_to_schedule.time_remaining = burst_cast_time;
 		timeline_event_to_schedule.on_complete_routine = Coroutine_SkillEffects(skill_to_schedule, true);
 		EventsTimeline.instance.Schedule(timeline_event_to_schedule);
@@ -183,6 +184,7 @@ public class PlayerBattle : MonoBehaviour {
 		timeline_event_to_schedule.name = "("+ skill_to_schedule.skill_name +")";
 		timeline_event_to_schedule.side = TimelineSide.PLAYER;
 		timeline_event_to_schedule.event_type = TimelineEventType.PLAYER_NORMAL_ATTACK;
+		timeline_event_to_schedule.element = skill_to_schedule.element;
 		timeline_event_to_schedule.time_remaining = skill_to_schedule.cast_time;
 		timeline_event_to_schedule.on_complete_routine = Coroutine_SkillEffects(skill_to_schedule);
 		EventsTimeline.instance.Schedule(timeline_event_to_schedule);

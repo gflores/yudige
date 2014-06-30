@@ -46,11 +46,13 @@ public class SequentialEventValidate : SequentialAction {
 		if (StateManager.instance.current_states.Contains(StateManager.State.BATTLE_INTRO) == false)
 			StateManager.instance.current_states.Remove(StateManager.State.SCRIPTED_EVENT);
 		StateManager.instance.UpdateFromStates();
-		Invoke("SetIsAvailable", 0.1f);
-	}
-	void SetIsAvailable(){
 		is_available = true;
+		Debug.LogWarning("WHERERERERER");
+//		Invoke("SetIsAvailable", 0.3f);
 	}
+//	void SetIsAvailable(){
+//
+//	}
 	public void MakePause()
 	{
 		Time.timeScale = 0f;
