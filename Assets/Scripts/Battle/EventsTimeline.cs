@@ -21,6 +21,7 @@ public class TimelineEvent{
 	public string name;
 	public TimelineSide side;
 	public TimelineEventType event_type;
+	public Element element;
 	public IEnumerator on_complete_routine;
 }
 

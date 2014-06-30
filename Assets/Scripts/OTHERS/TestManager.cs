@@ -8,6 +8,12 @@ public class TestManager : MonoBehaviour {
 	public MosterData player_moster_to_evolve_test;
 	public Element battle_selected_element_for_defense;
 	public Element karma_boost_element_selected;
+	public bool quick_screens = false;
+	public static TestManager instance;
+	void Awake()
+	{
+		instance = this;
+	}
 	void Update () {
 		if (Input.GetKeyDown(KeyCode.KeypadPlus))
 			Time.timeScale *= 2;
@@ -20,6 +26,10 @@ public class TestManager : MonoBehaviour {
 		}
 		if (Input.GetKey(KeyCode.LeftShift))
 	    {
+			if (Input.GetKeyDown(KeyCode.L))
+			{
+				quick_screens = !quick_screens;
+			}
 			if (Input.GetKeyDown(KeyCode.P))
 			{
 				Debug.LogWarning("Player loose collision !");

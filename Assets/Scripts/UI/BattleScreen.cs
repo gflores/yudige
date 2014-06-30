@@ -89,6 +89,17 @@ public class BattleScreen : MonoBehaviour
 			sprite.pivot = e.side == TimelineSide.PLAYER ? UIWidget.Pivot.Right : UIWidget.Pivot.Left;
 			label.transform.localPosition = new Vector3(e.side == TimelineSide.PLAYER ? -10 : 10, 0);
 			sprite.transform.localPosition = new Vector3(e.side == TimelineSide.PLAYER ? -5 : 5, 0);
+			if (e.event_type != TimelineEventType.PLAYER_CANCEL_COMBOS)
+			{
+				if (e.element == Element.DARK)
+					sprite.color = Color.black;
+				else if (e.element == Element.LIGHT)
+					sprite.color = Color.white;
+				else if (e.element == Element.ROCK)
+					sprite.color = new Color(156/255f, 126/255f, 0);
+				else if (e.element == Element.FIRE)
+					sprite.color = Color.red;
+			}
 
 
 			n.transform.SetParent(events_container);
@@ -99,15 +110,18 @@ public class BattleScreen : MonoBehaviour
 
 			if (e.event_type == TimelineEventType.ENEMY_SIMPLE_ATTACK || e.event_type == TimelineEventType.PLAYER_NORMAL_ATTACK)
 			{
+				sprite.transform.localScale = new Vector3(140, 30, 1);
 				label.transform.localScale = new Vector3(20, 20, 1);
 			}
 			else if (e.event_type == TimelineEventType.ENEMY_BURST_ATTACK || e.event_type == TimelineEventType.PLAYER_BURST_ATTACK)
 			{
+				sprite.transform.localScale = new Vector3(140, 60, 1);
 				label.transform.localScale = new Vector3(30, 30, 1);
 			}
 			else if (e.event_type == TimelineEventType.PLAYER_CANCEL_COMBOS)
 			{
-				label.transform.localScale = new Vector3(10, 10, 1);
+				sprite.transform.localScale = new Vector3(140, 25, 1);
+				label.transform.localScale = new Vector3(15, 15, 1);
 			}
 		}
 	}
@@ -145,7 +159,8 @@ public class BattleScreen : MonoBehaviour
 
 	void ResetAffinities()
 	{
-		PlayerBattle.instance.CancelCombos();
+		if (PlayerBattle.instance.is_casting_skill != true && PlayerBattle.instance.bonus_affinity_to_be_added_next != 0)
+			PlayerBattle.instance.CancelCombos();
 	}
 
 	public void SkillTimelinePreview(Skill sk)

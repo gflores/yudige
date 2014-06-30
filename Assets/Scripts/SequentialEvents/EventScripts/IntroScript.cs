@@ -18,6 +18,7 @@ public class IntroScript : SequentialEventValidate {
 		yield return StartCoroutine(_5());
 		yield return StartCoroutine(_6());
 		yield return StartCoroutine(_7());
+		yield return StartCoroutine(_8());
 		PopupDialog.instance.Hide();
 		ForceDoNextAction();
 
@@ -26,13 +27,14 @@ public class IntroScript : SequentialEventValidate {
 	}
 
 	IEnumerator _0(){
+		SoundManager.instance.PlayIfDifferent(SoundManager.instance.death_music);
 		PlayerExploration.instance.main_renderer.enabled = false;
 
 		CameraManager.instance.SetColorToFadePlane(new Color(0, 0, 0, 1));
 		PopupText.instance.Show(0, 200, 500, 300);
 		PopupText.instance.text_label.text = "";
 		yield return StartCoroutine(StringUtils.LaunchProgressiveLabel(
-			"There existed a being which wanted to destroy everything\n",
+			"There was a non-existent being who wanted to destroy everything\n",
 			PopupText.instance.text_label
 		));
 		yield return new WaitForSeconds(0.001f);
@@ -47,14 +49,14 @@ public class IntroScript : SequentialEventValidate {
 	IEnumerator _2(){
 		PopupText.instance.text_label.text = "";
 		yield return StartCoroutine(StringUtils.LaunchProgressiveLabel(
-			"The reason he wanted to exist was that only existing things could affect other existent beings.\n",
+			"The reason he wanted to exist was that only existing things could affect reality.\n",
 			PopupText.instance.text_label
 			));
 		yield return new WaitForSeconds(0.001f);
 	}
 	IEnumerator _3(){
 		yield return StartCoroutine(StringUtils.LaunchProgressiveLabel(
-			"However this world had a very particular constraint.\n",
+			"However the world had a very particular constraint.\n",
 			PopupText.instance.text_label
 			));
 		yield return new WaitForSeconds(0.001f);
@@ -68,6 +70,7 @@ public class IntroScript : SequentialEventValidate {
 		yield return new WaitForSeconds(0.001f);
 	}
 	IEnumerator _5(){
+		SoundManager.instance.current_music_played.Stop();
 		yield return StartCoroutine(StringUtils.LaunchProgressiveLabel(
 			"So the Void had no other choices than becoming an already existing \"something\"",
 			PopupText.instance.text_label
@@ -89,7 +92,12 @@ public class IntroScript : SequentialEventValidate {
 		yield return new WaitForSeconds(0.5f);
 		yield return StartCoroutine(CameraManager.instance.COROUTINE_MainCameraFadeToTransparent(3f));
 		GameManager.instance.current_screen.ApplyBackgroundMusic();
+		yield return StartCoroutine(
+			PopupDialog.instance.Coroutine_MakeSay(PopupDialog.instance.protag_name,
+		                                       "How conveniently easy it is to go from non-existence to existence.", true));
+	}
+	IEnumerator _8(){
 		yield return StartCoroutine(PopupDialog.instance.Coroutine_MakeSay(PopupDialog.instance.protag_name,
-		                                                                   "How conveniently easy it is to be"));
+		                                                                   "But strangely, I have the feeling that doing the other way around won't be as simple.", true));
 	}
 }
