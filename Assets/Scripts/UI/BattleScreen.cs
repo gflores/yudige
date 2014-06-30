@@ -87,9 +87,9 @@ public class BattleScreen : MonoBehaviour
 			UILabel label = n.GetComponentInChildren<UILabel>();
 			UISprite sprite = n.GetComponentInChildren<UISprite>();
 			label.text = e.name;
-			label.pivot = e.side == TimelineSide.PLAYER ? UIWidget.Pivot.Right : UIWidget.Pivot.Left;
+			//label.pivot = e.side == TimelineSide.PLAYER ? UIWidget.Pivot.Right : UIWidget.Pivot.Left;
 			sprite.pivot = e.side == TimelineSide.PLAYER ? UIWidget.Pivot.Right : UIWidget.Pivot.Left;
-			label.transform.localPosition = new Vector3(e.side == TimelineSide.PLAYER ? -10 : 10, 0);
+			label.transform.localPosition = new Vector3(e.side == TimelineSide.PLAYER ? -75 : 75, 0);
 			sprite.transform.localPosition = new Vector3(e.side == TimelineSide.PLAYER ? -5 : 5, 0);
 			if (e.event_type != TimelineEventType.PLAYER_CANCEL_COMBOS)
 			{
