@@ -25,8 +25,7 @@ public class SkillButton : MonoBehaviour
 		if (sk != null)
 		{
 			label.text = sk.skill_name;
-			button.disabledColor = sk.is_consumed ? Color.red : Color.gray ;
-			button.isEnabled = PlayerBattle.instance.IsSkillAvailable(sk) && sk.is_consumed == false;
+			label.color = sk.is_consumed ? Color.gray : Color.white;
 
 
 			
@@ -35,13 +34,12 @@ public class SkillButton : MonoBehaviour
 
 	void OnClick()
 	{
-		if (sk != null && button.isEnabled)
+		if (sk != null && button.isEnabled && sk.is_consumed == false)
 			PlayerBattle.instance.ClickOnSkill (sk);
 	}
 
 	void OnHover(bool isOver)
 	{
-		parent.DisplayPreview(isOver);
 		BattleScreen.instance.SkillTimelinePreview(isOver ? sk : null);
 	}
 	

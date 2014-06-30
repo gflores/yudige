@@ -11,11 +11,13 @@ public class BattleScreen : MonoBehaviour
 	public UILabel shield_label;
 	public UILabel health_label;
 	public Transform events_container;
-	public UILabel event_template;
+	public GameObject event_template;
 	public UILabel player_damage;
 	public UILabel boss_damage;
 	public UIButton cancel_button;
 	public UISprite timeline_preview;
+
+	public GameObject disabled_skills;
 
 	public UILabel boss_dark_label;
 	public UILabel boss_light_label;
@@ -41,6 +43,8 @@ public class BattleScreen : MonoBehaviour
 			UpdateTimeline ();
 
 			cancel_button.isEnabled = PlayerBattle.instance.is_casting_skill != true && PlayerBattle.instance.bonus_affinity_to_be_added_next != 0;
+			disabled_skills.SetActive(PlayerBattle.instance.is_casting_skill == true);
+
 
 		}
 	}
@@ -76,22 +80,34 @@ public class BattleScreen : MonoBehaviour
 		List<TimelineEvent> events = EventsTimeline.instance.scheduled_events;
 		foreach (TimelineEvent e in events)
 		{
-			GameObject n = (GameObject)(GameObject.Instantiate(event_template.gameObject));
-			UILabel label = n.GetComponent<UILabel>();
+			GameObject n = (GameObject)(GameObject.Instantiate(event_template));
+			n.SetActive(true);
+			UILabel label = n.GetComponentInChildren<UILabel>();
+			UISprite sprite = n.GetComponentInChildren<UISprite>();
 			label.text = e.name;
+			label.pivot = e.side == TimelineSide.PLAYER ? UIWidget.Pivot.Right : UIWidget.Pivot.Left;
+			sprite.pivot = e.side == TimelineSide.PLAYER ? UIWidget.Pivot.Right : UIWidget.Pivot.Left;
+			label.transform.localPosition = new Vector3(e.side == TimelineSide.PLAYER ? -10 : 10, 0);
+			sprite.transform.localPosition = new Vector3(e.side == TimelineSide.PLAYER ? -5 : 5, 0);
+
+
 			n.transform.SetParent(events_container);
-			n.transform.localPosition = new Vector3(e.side == TimelineSide.PLAYER ? -75 : 75, -275 + (e.time_remaining / EventsTimeline.instance.total_time) * 550);
+			n.transform.localPosition = new Vector3(0, -275 + (e.time_remaining / EventsTimeline.instance.total_time) * 550);
+			n.transform.localScale = new Vector3(1,1);
+
+
+
 			if (e.event_type == TimelineEventType.ENEMY_SIMPLE_ATTACK || e.event_type == TimelineEventType.PLAYER_NORMAL_ATTACK)
 			{
-				n.transform.localScale = new Vector3(20, 20, 1);
+				label.transform.localScale = new Vector3(20, 20, 1);
 			}
 			else if (e.event_type == TimelineEventType.ENEMY_BURST_ATTACK || e.event_type == TimelineEventType.PLAYER_BURST_ATTACK)
 			{
-				n.transform.localScale = new Vector3(30, 30, 1);
+				label.transform.localScale = new Vector3(30, 30, 1);
 			}
 			else if (e.event_type == TimelineEventType.PLAYER_CANCEL_COMBOS)
 			{
-				n.transform.localScale = new Vector3(10, 10, 1);
+				label.transform.localScale = new Vector3(10, 10, 1);
 			}
 		}
 	}

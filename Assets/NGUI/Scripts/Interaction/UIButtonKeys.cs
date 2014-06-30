@@ -20,6 +20,7 @@ public class UIButtonKeys : MonoBehaviour
 	public UIButtonKeys selectOnDown;
 	public UIButtonKeys selectOnLeft;
 	public UIButtonKeys selectOnRight;
+	
 
 	void OnEnable ()
 	{

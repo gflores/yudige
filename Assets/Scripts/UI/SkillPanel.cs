@@ -34,7 +34,8 @@ public class SkillPanel : MonoBehaviour
 		slot2.gameObject.SetActive (slot2.sk != null);
 		slot3.gameObject.SetActive (slot3.sk != null);
 		affinity_label.text = PlayerBattle.instance.GetEffectiveBattleElementAffinity(element).ToString();
-		preview_label.text = (PlayerBattle.instance.GetEffectiveBattleElementAffinity(element) + PlayerBattle.instance.bonus_affinity_to_be_added_next).ToString() ;
+		preview_label.text = "+" + PlayerBattle.instance.bonus_affinity_to_be_added_next.ToString() ;
+		preview.SetActive(PlayerBattle.instance.has_element && PlayerBattle.instance.current_element == element );
 
 	}
 
@@ -46,9 +47,4 @@ public class SkillPanel : MonoBehaviour
 		PopupSmall.instance.Show (0,0, 200, 50);
 	}
 
-	public void DisplayPreview(bool b)
-	{
-		preview.SetActive(b);
-
-	}
 }

@@ -19,11 +19,15 @@ public class PopupSmall : MonoBehaviour
 
 	public void Show(int x, int y, int width, int height)
 	{
+		int label_width = width - 20;
+		int label_height = height - 20;
+
 		gameObject.SetActive(true);
 		gameObject.transform.localPosition = new Vector3(x, y);
 		text_sprite.transform.localScale = new Vector3(width, height);
-		text_label.lineWidth = width - 20;
-		text_label.lineHeight = height - 20;
+		text_label.transform.localPosition = new Vector3(-( label_width / 2), 0);
+		text_label.lineWidth = label_width;
+		text_label.lineHeight = label_height;
 		
 	}
 

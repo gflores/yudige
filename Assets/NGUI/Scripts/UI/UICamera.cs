@@ -794,8 +794,10 @@ public class UICamera : MonoBehaviour
 
 	void Update ()
 	{
+
 		// Only the first UI layer should be processing events
 		if (!Application.isPlaying || !handlesEvents) return;
+
 
 		current = this;
 
@@ -1017,6 +1019,7 @@ public class UICamera : MonoBehaviour
 
 	public void ProcessOthers ()
 	{
+
 		currentTouchID = -100;
 		currentTouch = mController;
 
