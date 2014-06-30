@@ -9,6 +9,7 @@ public class GenericExplorationMosterEvents : MonoBehaviour {
 	public bool can_validate_multiple_times = false;
 	public bool can_validate = true;
 	public bool can_aggress = true;
+	int counter = 0;
 	void Start()
 	{
 		if (on_validate != null)
@@ -20,6 +21,7 @@ public class GenericExplorationMosterEvents : MonoBehaviour {
 	{
 		if (TagManager.ContainsTag(other, "TAG_player_action_trigger_hitbox") == true)
 		{
+			counter++;
 			player_action_trigger_inside = true;
 		}
 	}
@@ -28,7 +30,9 @@ public class GenericExplorationMosterEvents : MonoBehaviour {
 	{
 		if (TagManager.ContainsTag(other, "TAG_player_action_trigger_hitbox") == true)
 		{
-			player_action_trigger_inside = false;
+			counter--;
+			if (counter == 0)
+				player_action_trigger_inside = false;
 		}
 	}//titi
 
