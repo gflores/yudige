@@ -66,8 +66,8 @@ public class GameManager : MonoBehaviour {
 		}
 		else
 		{
-			MostersManager.instance.AddToEliminated(baby_moster);
-			baby_moster.MosterStateUpdate();
+			MostersManager.instance.AddToEliminated(starting_moster);
+			starting_moster.MosterStateUpdate();
 		}
 	}
 	IEnumerator AutoSaveContinuously()

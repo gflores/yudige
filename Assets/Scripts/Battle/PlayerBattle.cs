@@ -115,7 +115,7 @@ public class PlayerBattle : MonoBehaviour {
 		TimelineEvent timeline_event_to_schedule;
 		
 		timeline_event_to_schedule = new TimelineEvent();
-		timeline_event_to_schedule.name = "BURST" + "(" +skill_to_schedule.skill_name +")";
+		timeline_event_to_schedule.name = skill_to_schedule.skill_name;
 		timeline_event_to_schedule.side = TimelineSide.PLAYER;
 		timeline_event_to_schedule.event_type = TimelineEventType.PLAYER_BURST_ATTACK;
 		timeline_event_to_schedule.element = skill_to_schedule.element;
@@ -181,7 +181,7 @@ public class PlayerBattle : MonoBehaviour {
 		TimelineEvent timeline_event_to_schedule;
 		
 		timeline_event_to_schedule = new TimelineEvent();
-		timeline_event_to_schedule.name = "("+ skill_to_schedule.skill_name +")";
+		timeline_event_to_schedule.name = skill_to_schedule.skill_name;
 		timeline_event_to_schedule.side = TimelineSide.PLAYER;
 		timeline_event_to_schedule.event_type = TimelineEventType.PLAYER_NORMAL_ATTACK;
 		timeline_event_to_schedule.element = skill_to_schedule.element;

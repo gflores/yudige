@@ -51,10 +51,12 @@ public class StateManager : MonoBehaviour {
 		{
 			GameManager.instance.battle_gui_camera.enabled = true;
 			GameManager.instance.battle_element_camera.enabled = true;
+			BattleScreen.instance.gameObject.SetActive(true);
 //			BattleTimeFlowing(true);
 		}
 		else
 		{
+			BattleScreen.instance.gameObject.SetActive(false);
 			GameManager.instance.battle_gui_camera.enabled = false;
 			GameManager.instance.battle_element_camera.enabled = false;
 //			BattleTimeFlowing(false);

@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class TestManager : MonoBehaviour {
+	public bool hack_mode = false;
 	public Skill skill_to_test;
 	public SkillEffects tested_skill_effects;
 	public NpcMosterBattle enemy_moster_to_test;
@@ -14,8 +15,9 @@ public class TestManager : MonoBehaviour {
 	{
 		instance = this;
 	}
-	void Update () {
-		if (Input.GetKeyDown(KeyCode.KeypadPlus))
+	void UpdateHack()
+	{
+				if (Input.GetKeyDown(KeyCode.KeypadPlus))
 			Time.timeScale *= 2;
 		if (Input.GetKeyDown(KeyCode.KeypadMinus))
 			Time.timeScale /= 2;
@@ -172,6 +174,17 @@ public class TestManager : MonoBehaviour {
 		{
 			Debug.LogWarning("LOADING GAME");
 			GameManager.instance.LoadGame();
+		}
+	}
+	void Update () {
+		if (hack_mode)
+		{
+			UpdateHack();
+		}
+		if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.F) && Input.GetKeyDown(KeyCode.G))
+		{
+			hack_mode = !hack_mode;
+			Debug.LogWarning("hack mode is now: " +hack_mode);
 		}
 	}
 }
