@@ -32,15 +32,29 @@ public class ScreenTeleportationPoint : MonoBehaviour {
 	}
 	protected virtual IEnumerator Coroutine_CustomTransition()
 	{
-//		yield return StartCoroutine(CameraManager.instance.COROUTINE_MainCameraFadeToOpaque(0.05f));
+		return Coroutine_BaseTransition();
+////		yield return StartCoroutine(CameraManager.instance.COROUTINE_MainCameraFadeToOpaque(0.05f));
+//		PlayerExploration.instance.transform.position = linked_teleportation_point.spawn_point.position;
+//		linked_teleportation_point.exploration_screen.MakeGoTo();
+////		yield return new WaitForSeconds(0.05f);
+//
+//		yield return StartCoroutine(SpecialEffectsManager.instance.Coroutine_StartTweenAlpha(
+//			CameraManager.instance.main_camera_fade_animation.GetComponent<SpriteRenderer>(),
+//			0.5f, 0, 0.2f));
+//
+////		yield return StartCoroutine(CameraManager.instance.COROUTINE_MainCameraFadeToTransparent(0.3f));
+	}
+	protected IEnumerator Coroutine_BaseTransition()
+	{
+		//		yield return StartCoroutine(CameraManager.instance.COROUTINE_MainCameraFadeToOpaque(0.05f));
 		PlayerExploration.instance.transform.position = linked_teleportation_point.spawn_point.position;
 		linked_teleportation_point.exploration_screen.MakeGoTo();
-//		yield return new WaitForSeconds(0.05f);
-
+		//		yield return new WaitForSeconds(0.05f);
+		
 		yield return StartCoroutine(SpecialEffectsManager.instance.Coroutine_StartTweenAlpha(
 			CameraManager.instance.main_camera_fade_animation.GetComponent<SpriteRenderer>(),
 			0.5f, 0, 0.2f));
-
-//		yield return StartCoroutine(CameraManager.instance.COROUTINE_MainCameraFadeToTransparent(0.3f));
+		
+		//		yield return StartCoroutine(CameraManager.instance.COROUTINE_MainCameraFadeToTransparent(0.3f));
 	}
 }

@@ -5,8 +5,8 @@ using System.Collections.Generic;
 public class PopupDialog : MonoBehaviour
 {
 	public UILabel name_label;
+	public UISprite name_sprite;
 	public UILabel text_label;
-
 	static public PopupDialog instance;
 	public string protag_name = "The Void";
 

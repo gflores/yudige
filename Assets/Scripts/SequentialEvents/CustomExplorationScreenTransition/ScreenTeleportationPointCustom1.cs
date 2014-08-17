@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ScreenTeleportationPointCustom1 : ScreenTeleportationPoint {
+public sealed class ScreenTeleportationPointCustom1 : ScreenTeleportationPoint {
 	bool first_time = true;
-	protected override IEnumerator Coroutine_CustomTransition()
+	sealed protected override IEnumerator Coroutine_CustomTransition()
 	{
 		if (first_time == true)
 		{
@@ -35,7 +35,8 @@ public class ScreenTeleportationPointCustom1 : ScreenTeleportationPoint {
 		}
 		else
 		{
-			yield return StartCoroutine(base.Coroutine_CustomTransition());
+			yield return StartCoroutine(Coroutine_BaseTransition());
+//			yield return StartCoroutine(base.Coroutine_CustomTransition());
 		}
 	}
 	IEnumerator WaitForValidation()

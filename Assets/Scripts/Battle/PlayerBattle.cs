@@ -41,7 +41,7 @@ public class PlayerBattle : MonoBehaviour {
 	float _time_passed_before_increase_shield;
 	void Update()
 	{
-		if (is_shield_live == true && Player.instance.is_living_time_passing == true)
+		if (is_shield_live == true)
 		{
 			_time_passed_before_increase_shield += Time.deltaTime;
 			if (_time_passed_before_increase_shield >= time_passed_before_shield_recovery)

@@ -9,6 +9,8 @@ public class MainMenuManager : MonoBehaviour {
 	
 	public void ContinueGame()
 	{
+		if (SaveManager.current_saved_game.is_new_game)
+			return;
 		MasterGameManager.is_in_tutorial = false;
 		MasterGameManager.want_new_game = false;
 		Application.LoadLevel("main");
@@ -23,6 +25,10 @@ public class MainMenuManager : MonoBehaviour {
 	{
 		MasterGameManager.is_in_tutorial = false;
 		MasterGameManager.want_new_game = true;
+		SaveManager.current_saved_game.is_new_game = true;
+		SaveManager.current_saved_game.is_in_tutorial = false;
+		SaveManager.instance.LaunchSave();
+
 		Application.LoadLevel("main");
 	}
 

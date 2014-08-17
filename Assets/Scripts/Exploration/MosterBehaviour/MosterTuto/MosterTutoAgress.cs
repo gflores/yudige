@@ -10,6 +10,8 @@ public class MosterTutoAgress : BaseExplorationInteraction {
 		
 		//yield return StartCoroutine(_0());
 		//yield return StartCoroutine(_1());
+		SoundManager.instance.current_music_played.Stop();
+		SoundManager.instance.remove_element_sound.Play();
 		yield return StartCoroutine(_2());
 		yield return StartCoroutine(_3());
 

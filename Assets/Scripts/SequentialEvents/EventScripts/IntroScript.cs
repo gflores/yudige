@@ -72,7 +72,7 @@ public class IntroScript : SequentialEventValidate {
 	IEnumerator _5(){
 		SoundManager.instance.current_music_played.Stop();
 		yield return StartCoroutine(StringUtils.LaunchProgressiveLabel(
-			"So the Void had no other choices than becoming an already existing \"something\".",
+			"So the Void had no other choice than becoming an already existing \"something\".",
 			PopupText.instance.text_label
 			));
 		yield return new WaitForSeconds(0.001f);
